@@ -12,16 +12,13 @@ public class Main {
         BotConfig config = new BotConfig();
 
         TelegramBot bot = new TelegramBot(config);
-        //System.out.println(bot.getBotToken());
-        //System.out.println(bot.getBotUsername());
 
-        //System.setProperty("log4j.configuration", "C\\Users\\Андрей\\Desktop\\Java-telegram-bot\\log4j.xml");
 
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
         try {
             telegramBotsApi.registerBot(bot);
         } catch (TelegramApiException e) {
-            //e.printStackTrace();
+            e.printStackTrace();
         }
     }
 }

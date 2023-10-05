@@ -8,29 +8,26 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 public class TelegramBot extends TelegramLongPollingBot {
     BotConfig config;
+    CommandHandler commandHandler;
 
     public TelegramBot(BotConfig config) {
+
         this.config = config;
+        this.commandHandler = new CommandHandler();
     }
 
     @Override
     public void onUpdateReceived(Update update) {
-        if (update.hasMessage() && update.getMessage().hasText()){
-            String msgText = update.getMessage().getText();
-            long chatID = update.getMessage().getChatId();
+        if (update.hasMessage() && update.getMessage().hasText()) {
+            String messageText = update.getMessage().getText();
+            if (messageText.startsWith("/")) {
 
-            switch (msgText){
-                case "/start":
-                    startCommandReceived(chatID, update.getMessage().getChat().getFirstName());
-                    break;
-                default: sendMessage(chatID, "sorry, command was not supported(");
-
+                String command = messageText.split(" ")[0]; // Получите команду
+                sendMessage(update.getMessage().getChatId(), commandHandler.handleCommand(command, update));
+            } else {
+                sendMessage(update.getMessage().getChatId(), "While I don't understand you, write /help and enter the command.");
             }
         }
-    }
-    private void startCommandReceived(long chatID, String firstName) {
-        String ans = "Hi, " + firstName + " , nice to meet you!";
-        sendMessage(chatID, ans);
     }
 
     private void sendMessage(long chatID, String textToSend){
