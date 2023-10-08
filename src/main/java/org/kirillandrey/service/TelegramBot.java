@@ -21,11 +21,11 @@ public class TelegramBot extends TelegramLongPollingBot {
         if (update.hasMessage() && update.getMessage().hasText()) {
             String messageText = update.getMessage().getText();
             if (messageText.startsWith("/")) {
-
-                String command = messageText.split(" ")[0]; // Получите команду
-                sendMessage(update.getMessage().getChatId(), commandHandler.handleCommand(command, update));
+                String[] fullcommand = messageText.split(" ");
+                String command = fullcommand[0];
+                sendMessage(update.getMessage().getChatId(), commandHandler.handleCommand(command, update, fullcommand));
             } else {
-                sendMessage(update.getMessage().getChatId(), "While I don't understand you, write /help and enter the command.");
+                sendMessage(update.getMessage().getChatId(), "Пока я вас не понимаю, напишите /help и введите команду.");
             }
         }
     }
