@@ -7,7 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import java.util.HashMap;
 
 public class CommandHandler{
-    public final HashMap<String, Command> commandMap = new HashMap<>();
+    protected final HashMap<String, Command> commandMap = new HashMap<>();
 
     public CommandHandler() {
         commandMap.put("/start", new Start());
