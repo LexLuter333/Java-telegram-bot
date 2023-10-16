@@ -10,7 +10,7 @@ public class About implements Command {
     private String info = "Узнать подробнее о боте и его функциях.";
 
     @Override
-    public String execute(Update update, HashMap<String, Command> commandMap, String[] args) {
+    public String execute(Update update, String[] args) {
         return Resautl;
     }
     public String getInfo(){

@@ -10,7 +10,7 @@ public class Start implements Command {
     private String info = "Начальное приветствие бота.";
 
     @Override
-    public String execute(Update update, HashMap<String, Command> commandMap, String[] args) {
+    public String execute(Update update, String[] args) {
         return Resautl;
     }
     public String getInfo(){

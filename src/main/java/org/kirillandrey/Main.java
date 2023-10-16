@@ -13,7 +13,6 @@ public class Main {
 
         TelegramBot bot = new TelegramBot(config);
 
-
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
         try {
             telegramBotsApi.registerBot(bot);
