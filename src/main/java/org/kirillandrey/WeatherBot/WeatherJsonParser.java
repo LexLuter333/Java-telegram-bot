@@ -15,7 +15,7 @@ import java.util.Locale;
 
 public class WeatherJsonParser {
     private final static String API_CALL_TEMPLATE = "https://api.openweathermap.org/data/2.5/forecast?q=";
-    private final static String API_KEY_TEMPLATE = "&units=metric&APPID=...";
+    private final static String API_KEY_TEMPLATE = "71bc2c31f5c43f7e094dc30e5b20f54a";
     private final static String USER_AGENT = "Mozilla/5.0";
     private final static DateTimeFormatter INPUT_DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private final static DateTimeFormatter OUTPUT_DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("MMM-dd HH:mm", Locale.US);
@@ -36,12 +36,12 @@ public class WeatherJsonParser {
         return result;
     }
     private static String downloadJsonRawData(String city) throws Exception{
-        String urlString = "";
+        String urlString = API_CALL_TEMPLATE + city + API_KEY_TEMPLATE;
         URL urlObject = new URL(urlString);
 
         HttpURLConnection connection = (HttpURLConnection) urlObject.openConnection();
         connection.setRequestMethod("GET");
-        connection.setRequestProperty("User-agent", "Mozilla/5.0");
+        connection.setRequestProperty("User-agent", USER_AGENT);
 
         int responseCode = connection.getResponseCode();
         if (responseCode != 404){

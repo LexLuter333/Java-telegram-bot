@@ -13,7 +13,7 @@ public class CommandHandler{
         commandMap.put("/start", new Start());
         commandMap.put("/authors", new Authors());
         commandMap.put("/about", new About());
-
+        commandMap.put("/weather", new Weather());
         commandMap.put("/help", new Help());
     }
 
