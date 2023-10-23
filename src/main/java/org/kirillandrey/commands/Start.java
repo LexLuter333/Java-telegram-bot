@@ -6,7 +6,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import java.util.HashMap;
 
 public class Start implements Command {
-    private String Resautl = "Hello, I am TELEGRAM BOT.";
+    private String Resautl = "Привет, я WeatherBot!";
     private String info = "Начальное приветствие бота.";
 
     @Override
