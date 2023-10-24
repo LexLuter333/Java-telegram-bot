@@ -6,6 +6,8 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.sql.SQLException;
+
 public class TelegramBot extends TelegramLongPollingBot {
     BotConfig config;
     CommandHandler commandHandler;
@@ -23,7 +25,11 @@ public class TelegramBot extends TelegramLongPollingBot {
             if (messageText.startsWith("/")) {
                 String[] fullcommand = messageText.split(" ");
                 String command = fullcommand[0];
-                sendMessage(update.getMessage().getChatId(), commandHandler.handleCommand(command, update, fullcommand));
+                try {
+                    sendMessage(update.getMessage().getChatId(), commandHandler.handleCommand(command, update, fullcommand));
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             } else {
                 sendMessage(update.getMessage().getChatId(), "Пока я вас не понимаю, напишите /help и введите команду.");
             }
