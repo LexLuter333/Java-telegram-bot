@@ -13,9 +13,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
 public class WeatherJsonParser {
     private final static String API_CALL_TEMPLATE = "https://api.openweathermap.org/data/2.5/forecast?q=";
-    private final static String API_KEY_TEMPLATE = "&units=metric&APPID=71bc2c31f5c43f7e094dc30e5b20f54a";
+    private static Dotenv dotenv = Dotenv.load();;
+    private final static String API_KEY_TEMPLATE = "&units=metric&APPID=" + dotenv.get("apiWeatherKey");
     private final static String USER_AGENT = "Mozilla/5.0";
     private final static DateTimeFormatter INPUT_DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private final static DateTimeFormatter OUTPUT_DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("MMM-dd HH:mm", Locale.US);
@@ -23,15 +26,16 @@ public class WeatherJsonParser {
 
     public static String getReadyForecast(String city) {
         String result;
+
         try {
             String jsonRawData = downloadJsonRawData(city);
             List<String> linesOfForecast = convertRawDataToList(jsonRawData);
             result = String.format("%s:%s%s", city, System.lineSeparator(), parseForecastDataFromList(linesOfForecast));
         } catch (IllegalArgumentException e) {
-            return String.format("Can't find \"%s\" city. Try another one, for example: \"Kyiv\" or \"Moscow\"", city);
+            return String.format("Не можем найти \"%s\" город. Попробуйе ещё, например: \"Moscow\" or \"Ekateringurg\"", city);
         } catch (Exception e) {
             e.printStackTrace();
-            return "The service is not available, please try later";
+            return "Ошибка подклчения к сервису, попробуйте позже";
         }
         return result;
     }
@@ -66,7 +70,7 @@ public class WeatherJsonParser {
         if(arrNode.isArray()){
          for(final JsonNode objNode: arrNode){
              String forecastTime = objNode.get("dt_txt").toString();
-             if (forecastTime.contains("09:00") || forecastTime.contains("18:00")) {
+             if (forecastTime.contains("9:00") || forecastTime.contains("18:00")) {
                  weatherList.add(objNode.toString());
              }
          }
@@ -116,4 +120,6 @@ public class WeatherJsonParser {
 
         return String.format("%s   %s %s %s%s", formattedDateTime, formattedTemperature, formattedDescription, weatherIconCode, System.lineSeparator());
     }
+
+
 }
