@@ -15,6 +15,8 @@ import java.util.Locale;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
+import org.kirillandrey.WeatherBot.Transliteration;
+
 public class WeatherJsonParser {
     private final static String API_CALL_TEMPLATE = "https://api.openweathermap.org/data/2.5/forecast?q=";
     private static Dotenv dotenv = Dotenv.load();;
@@ -28,7 +30,7 @@ public class WeatherJsonParser {
         String result;
 
         try {
-            String jsonRawData = downloadJsonRawData(city);
+            String jsonRawData = downloadJsonRawData(new Transliteration().transliterate(city));
             List<String> linesOfForecast = convertRawDataToList(jsonRawData);
             result = String.format("%s:%s%s", city, System.lineSeparator(), parseForecastDataFromList(linesOfForecast));
         } catch (IllegalArgumentException e) {

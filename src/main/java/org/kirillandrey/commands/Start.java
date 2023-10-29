@@ -9,14 +9,14 @@ import java.sql.SQLException;
 
 
 public class Start implements Command {
-    private String Resault;
-    private String info = "Начальное приветствие бота.";
+    private String resault;
+    private String info = "Авторизация или регистрация в боте.";
 
     @Override
     public String execute(Update update, String[] args) {
         DateBaseHandler DBhendler = new DateBaseHandler();
-        if (DBhendler.findUser(update.getMessage().getChatId()) == true){
-            Resault = "Вы успешно авторизованы";
+        if (DBhendler.userIsDB(update.getMessage().getChatId()) == true){
+            resault = "Вы успешно авторизованы.";
         } else {
             try {
                 DBhendler.singUpUser(update.getMessage().getFrom().getFirstName(), update.getMessage().getFrom().getLastName(),
@@ -24,9 +24,9 @@ public class Start implements Command {
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-            Resault = "Вы успешно зарегестрированы";
+            resault = "Вы успешно зарегестрированы.";
         }
-        return Resault;
+        return resault;
     }
     public String getInfo(){
         return info;
