@@ -4,18 +4,24 @@ import org.kirillandrey.config.BotConfig;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TelegramBot extends TelegramLongPollingBot {
     BotConfig config;
     CommandHandler commandHandler;
+    DialogHandler dialogHandler;
 
     public TelegramBot(BotConfig config) {
 
         this.config = config;
         this.commandHandler = new CommandHandler();
+        this.dialogHandler = new DialogHandler();
     }
 
     @Override
@@ -31,7 +37,8 @@ public class TelegramBot extends TelegramLongPollingBot {
                     throw new RuntimeException(e);
                 }
             } else {
-                sendMessage(update.getMessage().getChatId(), "Пока я вас не понимаю, напишите /help и введите команду.");
+
+                sendMessage(update.getMessage().getChatId(), dialogHandler.handleDialog(messageText, update));
             }
         }
     }
