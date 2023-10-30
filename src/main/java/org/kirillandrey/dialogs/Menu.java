@@ -13,12 +13,10 @@ import java.util.Locale;
 public class Menu implements Dialog {
     String s_Ask = "Вы находитесь в меню";
     String s_Answer = "";
-    List<KeyboardRow> keyboard = new ArrayList<>();
+    List<String> keyboard = new ArrayList<>();
     public Menu(){
-        KeyboardRow row = new KeyboardRow();
-        row.add("Узнать погоду");
-        row.add("Настройки");
-        keyboard.add(row);
+        keyboard.add("Узнать погоду");
+        keyboard.add("Настройки");
     }
     @Override
     public String Ask() {
@@ -26,7 +24,7 @@ public class Menu implements Dialog {
     }
 
     @Override
-    public String Answer(String message, Update update, HashMap<Long, String> cache) {
+    public String Answer(String message, Update update, HashMap<Long, String> cache, List<String> button) {
         s_Answer = "";
         message = message.toLowerCase(Locale.ROOT);
         if (message.equals("узнать погоду")){
@@ -37,6 +35,8 @@ public class Menu implements Dialog {
         } else {
             s_Answer = "Ошибка, такого действия не существет.";
         }
+        button.clear();
+        button.addAll(new WCity().keyboard);
         return s_Answer;
     }
 }

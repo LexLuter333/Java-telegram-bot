@@ -4,6 +4,7 @@ import org.kirillandrey.dialogs.*;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class DialogHandler {
     HashMap<Long, String> Cache = new HashMap<>();
@@ -15,7 +16,7 @@ public class DialogHandler {
         Table.put("узнать погоду ещё", new WCity2());
     }
 
-    public String handleDialog(String command, Update update) {
+    public String handleDialog(String command, Update update, List<String> button) {
         Long chatid = update.getMessage().getChatId();
         String s_dlg = Cache.get(chatid);
         Dialog dlg = Table.get(s_dlg);
@@ -23,9 +24,9 @@ public class DialogHandler {
             String state = new DateBaseHandler().getState(chatid);
             dlg = Table.get(state);
             Cache.put(update.getMessage().getChatId(), state);
-            return dlg.Answer(command, update, Cache);
+            return dlg.Answer(command, update, Cache, button);
         } else {
-            return dlg.Answer(command, update, Cache);
+            return dlg.Answer(command, update, Cache, button);
         }
     }
 }
