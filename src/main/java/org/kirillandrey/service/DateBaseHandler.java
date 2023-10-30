@@ -43,7 +43,7 @@ public class DateBaseHandler {
                 prSt.setString(3, "?");
             }
 
-            prSt.setInt(4, 1);
+            prSt.setString(4, "меню");
             prSt.executeUpdate();
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -51,22 +51,57 @@ public class DateBaseHandler {
 
     }
 
-    public boolean findUser(Long chatid) {
-        String insert = "SELECT " + DBConst.USER_ID + " FROM " + DBConst.USER_TABLE + " WHERE " + DBConst.USER_CHATID + "=?";
+    public boolean userIsDB(Long chatid) {
+        String selectQuery = "SELECT " + DBConst.USER_ID + " FROM " + DBConst.USER_TABLE + " WHERE " + DBConst.USER_CHATID + "=?";
 
-        try {
-            PreparedStatement prSt = dbGetConnection().prepareStatement(insert);
-            prSt.setString(1, chatid.toString());
-            ResultSet resultSet = prSt.executeQuery();
+        try (Connection connection = dbGetConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
+            preparedStatement.setString(1, String.valueOf(chatid));
 
-            if (resultSet.next()) {
-                return true;
-            } else {
-                return false;
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                return resultSet.next();
             }
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             return false;
         }
     }
+    public String getState(Long chatid) {
+        String selectQuery = "SELECT " + DBConst.USER_STATE + " FROM " + DBConst.USER_TABLE + " WHERE " + DBConst.USER_CHATID + "=?";
+
+        try (Connection connection = dbGetConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
+            preparedStatement.setString(1, chatid.toString());
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    String state = resultSet.getString(DBConst.USER_STATE);
+
+                    return resultSet.getString(DBConst.USER_STATE);
+                }
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean setState(Long chatid, String newState) {
+        String updateQuery = "UPDATE " + DBConst.USER_TABLE + " SET " + DBConst.USER_STATE + "=? WHERE " + DBConst.USER_CHATID + "=?";
+
+        try (Connection connection = dbGetConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
+            preparedStatement.setString(1, newState);
+            preparedStatement.setString(2, chatid.toString());
+
+            int rowsUpdated = preparedStatement.executeUpdate();
+
+            return rowsUpdated > 0; // Возвращаем true, если были обновлены строки, иначе false.
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
 }
