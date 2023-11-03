@@ -1,7 +1,7 @@
-package org.kirillandrey.commands;
+package org.kirillandrey.commandService.commands;
 
-import org.kirillandrey.WeatherBot.WeatherJsonParser;
-import org.kirillandrey.service.Command;
+import org.kirillandrey.weatherBot.WeatherJsonParser;
+import org.kirillandrey.commandService.controller.Command;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 public class Weather implements Command {

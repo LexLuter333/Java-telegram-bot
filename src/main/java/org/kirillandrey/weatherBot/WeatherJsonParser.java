@@ -1,4 +1,4 @@
-package org.kirillandrey.WeatherBot;
+package org.kirillandrey.weatherBot;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,8 +14,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 import io.github.cdimascio.dotenv.Dotenv;
-
-import org.kirillandrey.WeatherBot.Transliteration;
 
 public class WeatherJsonParser {
     private final static String API_CALL_TEMPLATE = "https://api.openweathermap.org/data/2.5/forecast?q=";

@@ -1,7 +1,7 @@
-package org.kirillandrey.commands;
+package org.kirillandrey.commandService.commands;
 
-import org.kirillandrey.service.Command;
-import org.kirillandrey.service.CommandHandler;
+import org.kirillandrey.commandService.controller.Command;
+import org.kirillandrey.commandService.controller.CommandHandler;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.HashMap;

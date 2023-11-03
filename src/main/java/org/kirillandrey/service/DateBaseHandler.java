@@ -96,12 +96,11 @@ public class DateBaseHandler {
 
             int rowsUpdated = preparedStatement.executeUpdate();
 
-            return rowsUpdated > 0; // Возвращаем true, если были обновлены строки, иначе false.
+            return rowsUpdated > 0;
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             return false;
         }
     }
-
 
 }

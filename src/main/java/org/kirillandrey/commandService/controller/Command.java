@@ -1,4 +1,4 @@
-package org.kirillandrey.service;
+package org.kirillandrey.commandService.controller;
 
 import org.telegram.telegrambots.meta.api.objects.Update;
 

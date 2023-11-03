@@ -1,6 +1,7 @@
-package org.kirillandrey.service;
+package org.kirillandrey.dialogsService.controller;
 
-import org.kirillandrey.dialogs.*;
+import org.kirillandrey.dialogsService.dialogs.*;
+import org.kirillandrey.service.DateBaseHandler;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.HashMap;
@@ -11,9 +12,9 @@ public class DialogHandler {
     HashMap<String, Dialog> Table = new HashMap<>();
 
     public DialogHandler(){
-        Table.put("меню", new Menu());
-        Table.put("узнать погоду", new WCity());
-        Table.put("узнать погоду ещё", new WCity2());
+        Table.put("1", new Menu());
+        Table.put("2", new WCity());
+        Table.put("3", new WCityСycle());
     }
 
     public String handleDialog(String command, Update update, List<String> button) {
@@ -24,9 +25,9 @@ public class DialogHandler {
             String state = new DateBaseHandler().getState(chatid);
             dlg = Table.get(state);
             Cache.put(update.getMessage().getChatId(), state);
-            return dlg.Answer(command, update, Cache, button);
+            return dlg.answer(command, update, button);
         } else {
-            return dlg.Answer(command, update, Cache, button);
+            return dlg.answer(command, update, button);
         }
     }
 }
