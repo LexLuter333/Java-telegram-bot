@@ -2,13 +2,11 @@ package org.kirillandrey.commandService.controller;
 
 import org.kirillandrey.commandService.commands.*;
 
-import org.telegram.telegrambots.meta.api.objects.Update;
-
 import java.sql.SQLException;
 import java.util.HashMap;
 
 public class CommandHandler{
-    protected final HashMap<String, Command> commandMap = new HashMap<>();
+    private HashMap<String, Command> commandMap = new HashMap<>();
 
     public CommandHandler() {
         commandMap.put("/start", new Start());
@@ -18,10 +16,10 @@ public class CommandHandler{
         commandMap.put("/help", new Help());
     }
 
-    public String handleCommand(String command, Update update, String[] args) throws SQLException {
+    public String handleCommand(Long chatid, String command, String[] args) throws SQLException {
         Command cmd = commandMap.get(command);
         if (cmd != null) {
-           return cmd.execute(update, args);
+           return cmd.execute(chatid, args);
         } else {
             return "Извините, я не понимаю вашей команды";
         }

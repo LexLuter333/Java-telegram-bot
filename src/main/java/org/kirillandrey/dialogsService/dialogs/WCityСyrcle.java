@@ -1,21 +1,18 @@
 package org.kirillandrey.dialogsService.dialogs;
 
-import org.kirillandrey.service.DateBaseHandler;
 import org.kirillandrey.dialogsService.controller.Dialog;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
-public class Menu implements Dialog {
-    private String m_ask = "Вы находитесь в меню";
+public class WCityСyrcle implements Dialog {
+    private String m_ask = "Чтобы посмотреть погоду ещё раз, нажмите \"Узнать погоду\" или вернитесь в \"Меню\". ";
     List<String> keyboard = new ArrayList<>();
-    private String key = "меню";
-    public Menu(){
+    private String key;
+    public WCityСyrcle(){
         keyboard.add("Узнать погоду");
-        keyboard.add("Настройки");
+        keyboard.add("Меню");
     }
     @Override
     public String ask(List<String> button) {

@@ -43,7 +43,7 @@ public class DateBaseHandler {
                 prSt.setString(3, "?");
             }
 
-            prSt.setString(4, "меню");
+            prSt.setString(4, "0");
             prSt.executeUpdate();
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();

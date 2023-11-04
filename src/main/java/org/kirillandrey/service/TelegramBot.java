@@ -3,6 +3,7 @@ package org.kirillandrey.service;
 import org.kirillandrey.commandService.controller.CommandHandler;
 import org.kirillandrey.config.BotConfig;
 import org.kirillandrey.dialogsService.controller.DialogHandler;
+import org.kirillandrey.dialogsService.controller.Graph;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -13,6 +14,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class TelegramBot extends TelegramLongPollingBot {
     private BotConfig config;
@@ -30,18 +32,26 @@ public class TelegramBot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
             String messageText = update.getMessage().getText();
+            Long chatid = update.getMessage().getChatId();
             List<String> button = new ArrayList<>();
 
             if (messageText.startsWith("/")) {
                 String[] fullcommand = messageText.split(" ");
                 String command = fullcommand[0];
                 try {
-                    sendMessage(update.getMessage().getChatId(), commandHandler.handleCommand(command, update, fullcommand), button);
+                    sendMessage(chatid, commandHandler.handleCommand(chatid, command, fullcommand), button);
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
             } else {
-                sendMessage(update.getMessage().getChatId(), dialogHandler.handleDialog(messageText, update, button), button);
+                String answer = dialogHandler.handleAnswerDialog(messageText, chatid);
+                if (!answer.isEmpty()){
+                    sendMessage(chatid, answer, button);
+                }
+                String ask = dialogHandler.handleAskDialog(chatid, button);
+                if (!ask.isEmpty()){
+                    sendMessage(update.getMessage().getChatId(), ask, button);
+                }
             }
         }
     }

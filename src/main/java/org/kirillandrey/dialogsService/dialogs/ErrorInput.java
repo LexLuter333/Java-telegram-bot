@@ -9,13 +9,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class Menu implements Dialog {
-    private String m_ask = "Вы находитесь в меню";
+public class ErrorInput implements Dialog {
+    private String m_ask = "Ошибка ввода, попробуйте ещё раз или вернитесь в \"Меню\"";
+
     List<String> keyboard = new ArrayList<>();
-    private String key = "меню";
-    public Menu(){
-        keyboard.add("Узнать погоду");
-        keyboard.add("Настройки");
+    private String key;
+    public ErrorInput(){
+        keyboard.add("Меню");
+        keyboard.add("Назад");
     }
     @Override
     public String ask(List<String> button) {

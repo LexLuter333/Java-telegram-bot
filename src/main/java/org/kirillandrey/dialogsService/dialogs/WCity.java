@@ -10,16 +10,23 @@ import java.util.HashMap;
 import java.util.List;
 
 public class WCity implements Dialog {
-    String s_Ask = "Введите название города:";
-    String s_Answer = "";
+    private String m_ask = "Введите название города:";
+
     List<String> keyboard = new ArrayList<>();
+    private String key = "узнать погоду";
     @Override
-    public String ask() {
-        return s_Ask;
+    public String ask(List<String> button) {
+        button = keyboard;
+        return m_ask;
     }
 
     @Override
-    public String answer(String message, Update update, List<String> button) {
-        return s_Answer;
+    public String answer(String message, Long chatid) {
+        return WeatherJsonParser.getReadyForecast(message);
+    }
+
+    @Override
+    public String getKey() {
+        return key;
     }
 }

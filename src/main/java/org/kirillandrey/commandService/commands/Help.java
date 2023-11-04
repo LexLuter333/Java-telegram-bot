@@ -2,7 +2,6 @@ package org.kirillandrey.commandService.commands;
 
 import org.kirillandrey.commandService.controller.Command;
 import org.kirillandrey.commandService.controller.CommandHandler;
-import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.HashMap;
 
@@ -10,7 +9,7 @@ public class Help implements Command {
     private String resault;
     private String info = "<комманда> узнать что выполняет данная команда.";
     @Override
-    public String execute(Update update,  String[] args) {
+    public String execute(Long chatid, String[] args) {
         resault = "";
         HashMap<String, Command> commandMap = new CommandHandler().getCommandMap();
         if (args.length == 1) {
