@@ -1,19 +1,19 @@
 package org.kirillandrey.dialogsService.dialogs;
 
-import org.kirillandrey.weatherBot.WeatherJsonParser;
-import org.kirillandrey.service.DateBaseHandler;
 import org.kirillandrey.dialogsService.controller.Dialog;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-public class WCity implements Dialog {
-    private String m_ask = "Введите название города:";
-
+public class WCityСyrcle implements Dialog {
+    private String m_ask = "Чтобы посмотреть погоду ещё раз, нажмите \"Узнать погоду\". ";
     private List<String> keyboard = new ArrayList<>();
-    private String key = "узнать погоду";
+    private String key;
+    public WCityСyrcle(){
+        keyboard.add("Узнать погоду");
+        keyboard.add("Меню");
+    }
     @Override
     public String ask(List<String> button) {
         button = keyboard;

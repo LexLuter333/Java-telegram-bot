@@ -10,20 +10,26 @@ import java.util.List;
 import java.util.Locale;
 
 public class Menu implements Dialog {
-    String s_Ask = "Вы находитесь в меню";
-    String s_Answer = "";
-    List<String> keyboard = new ArrayList<>();
+    private String m_ask = "Вы находитесь в меню";
+    private List<String> keyboard = new ArrayList<>();
+    private String key = "меню";
     public Menu(){
         keyboard.add("Узнать погоду");
         keyboard.add("Настройки");
     }
     @Override
-    public String ask() {
-        return s_Ask;
+    public String ask(List<String> button) {
+        button = keyboard;
+        return m_ask;
     }
 
     @Override
-    public String answer(String message, Update update, List<String> button) {
-        return s_Answer;
+    public String answer(String message, Long chatid) {
+        return "";
+    }
+
+    @Override
+    public String getKey() {
+        return key;
     }
 }

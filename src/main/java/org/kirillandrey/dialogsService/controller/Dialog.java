@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public interface Dialog {
-    String ask();
-    String answer(String message, Update update, List<String> button);
+    public String ask(List<String> button);
+    public String answer(String message, Long chatid);
+    public String getKey();
 }

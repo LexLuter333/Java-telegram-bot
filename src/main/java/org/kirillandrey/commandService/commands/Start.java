@@ -1,9 +1,9 @@
 package org.kirillandrey.commandService.commands;
 
 import org.kirillandrey.commandService.controller.Command;
-import org.telegram.telegrambots.meta.api.objects.Update;
 
 import org.kirillandrey.service.DateBaseHandler;
+import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.sql.SQLException;
 
@@ -13,14 +13,14 @@ public class Start implements Command {
     private String info = "Авторизация или регистрация в боте.";
 
     @Override
-    public String execute(Update update, String[] args) {
+    public String execute(Long chatid, String[] args) {
         DateBaseHandler DBhendler = new DateBaseHandler();
-        if (DBhendler.userIsDB(update.getMessage().getChatId()) == true){
+        if (DBhendler.userIsDB(chatid) == true){
             resault = "Вы успешно авторизованы.";
         } else {
             try {
-                DBhendler.singUpUser(update.getMessage().getFrom().getFirstName(), update.getMessage().getFrom().getLastName(),
-                        update.getMessage().getChatId());
+                DBhendler.singUpUser("?", "?",
+                        chatid);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
