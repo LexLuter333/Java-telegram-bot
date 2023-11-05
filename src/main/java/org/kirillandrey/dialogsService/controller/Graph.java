@@ -36,7 +36,9 @@ public class Graph {
                     Node parent = nodes.get(String.valueOf(i));
                     Node child = nodes.get(String.valueOf(j));
                     if (parent != null && child != null) {
-                        child.setParent(parent);
+                        if (child.getParent() == null && j != 0 && j < adjacencyMatrix[i].length-1) {
+                            child.setParent(parent);
+                        }
                         parent.addChild(child);
                     }
                 }
@@ -46,4 +48,5 @@ public class Graph {
     public Node getNode(String key) {
         return nodes.get(key);
     }
+
 }

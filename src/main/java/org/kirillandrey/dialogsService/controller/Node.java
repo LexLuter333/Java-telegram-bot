@@ -38,7 +38,7 @@ public class Node {
     }
     public Node findNextNode(String command) {
         String new_command = command.toLowerCase();
-        if (new_command.equals("назад")) {
+        if (new_command.equals("назад") && parent != null) {
             return parent;
         }
         for (Node child : children) {
@@ -48,4 +48,5 @@ public class Node {
         }
         return null;
     }
+
 }

@@ -16,7 +16,8 @@ public class WCityСyrcle implements Dialog {
     }
     @Override
     public String ask(List<String> button) {
-        button = keyboard;
+        button.clear();
+        button.addAll(keyboard);
         return m_ask;
     }
 
@@ -24,7 +25,6 @@ public class WCityСyrcle implements Dialog {
     public String answer(String message, Long chatid) {
         return "";
     }
-
     @Override
     public String getKey() {
         return key;

@@ -9,9 +9,20 @@ import java.sql.ResultSet;
 import org.kirillandrey.config.DBConfig;
 
 import org.kirillandrey.config.DBConst;
+
 public class DateBaseHandler {
-    Connection dbConnection;
-    DBConfig dbConfig = new DBConfig();
+    private Connection dbConnection;
+    private DBConfig dbConfig;
+    public DateBaseHandler(DBConfig dbConfig) {
+        this.dbConfig = dbConfig;
+    }
+    public DateBaseHandler() {
+        this.dbConfig = new DBConfig();
+    }
+    public DateBaseHandler(DBConfig dbConfig, Connection dbConnection) {
+        this.dbConfig = dbConfig;
+        this.dbConnection = dbConnection;
+    }
 
     public Connection dbGetConnection() throws ClassNotFoundException, SQLException {
         String connectionString = "jdbc:mysql://" + dbConfig.getdbHost() + ":" + dbConfig.getdbPort() + "/" + dbConfig.getdbName();
@@ -85,7 +96,6 @@ public class DateBaseHandler {
         }
         return null;
     }
-
     public boolean setState(Long chatid, String newState) {
         String updateQuery = "UPDATE " + DBConst.USER_TABLE + " SET " + DBConst.USER_STATE + "=? WHERE " + DBConst.USER_CHATID + "=?";
 

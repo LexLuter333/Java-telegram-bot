@@ -10,17 +10,17 @@ import java.util.List;
 import java.util.Locale;
 
 public class ErrorInput implements Dialog {
-    private String m_ask = "Ошибка ввода, попробуйте ещё раз или вернитесь в \"Меню\"";
+    private String m_ask = "Ошибка ввода, вернитесь в \"Меню\"";
 
     List<String> keyboard = new ArrayList<>();
     private String key;
     public ErrorInput(){
         keyboard.add("Меню");
-        keyboard.add("Назад");
     }
     @Override
     public String ask(List<String> button) {
-        button = keyboard;
+        button.clear();
+        button.addAll(keyboard);
         return m_ask;
     }
 

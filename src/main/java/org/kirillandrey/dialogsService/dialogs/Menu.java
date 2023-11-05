@@ -19,7 +19,8 @@ public class Menu implements Dialog {
     }
     @Override
     public String ask(List<String> button) {
-        button = keyboard;
+        button.clear();
+        button.addAll(keyboard);
         return m_ask;
     }
 

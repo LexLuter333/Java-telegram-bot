@@ -16,7 +16,6 @@ public class WCity implements Dialog {
     private String key = "узнать погоду";
     @Override
     public String ask(List<String> button) {
-        button = keyboard;
         return m_ask;
     }
 
