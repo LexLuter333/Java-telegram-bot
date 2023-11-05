@@ -1,4 +1,4 @@
-package org.kirillandrey.weatherBot;
+package org.kirillandrey.WeatherBot;
 
 import java.util.HashMap;
 import java.util.Map;
