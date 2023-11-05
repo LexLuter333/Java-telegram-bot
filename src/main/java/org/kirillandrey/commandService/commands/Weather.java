@@ -1,6 +1,6 @@
 package org.kirillandrey.commandService.commands;
 
-import org.kirillandrey.weatherBot.WeatherJsonParser;
+import org.kirillandrey.WeatherBot.WeatherParse;
 import org.kirillandrey.commandService.controller.Command;
 
 public class Weather implements Command {
@@ -16,7 +16,7 @@ public class Weather implements Command {
                 City = City + args[i];
                 if (i != args.length-1) City = City + " ";
             }
-            resautl = WeatherJsonParser.getReadyForecast(City);
+            resautl = WeatherParse.getReadyForecast(City);
         } else {
             resautl = "Ошибка ввода локации (Пример: /weather Екатеринбург или Ekaterinburg)";
         }

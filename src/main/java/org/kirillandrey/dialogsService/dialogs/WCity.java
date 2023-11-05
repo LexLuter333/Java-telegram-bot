@@ -1,12 +1,9 @@
 package org.kirillandrey.dialogsService.dialogs;
 
-import org.kirillandrey.weatherBot.WeatherJsonParser;
-import org.kirillandrey.service.DateBaseHandler;
+import org.kirillandrey.WeatherBot.WeatherParse;
 import org.kirillandrey.dialogsService.controller.Dialog;
-import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class WCity implements Dialog {
@@ -21,7 +18,7 @@ public class WCity implements Dialog {
 
     @Override
     public String answer(String message, Long chatid) {
-        return WeatherJsonParser.getReadyForecast(message);
+        return WeatherParse.getReadyForecast(message);
     }
 
     @Override
