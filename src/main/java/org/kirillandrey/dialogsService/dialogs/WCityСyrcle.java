@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WCityСyrcle implements Dialog {
-    private String m_ask = "Чтобы посмотреть погоду ещё раз, нажмите \"Узнать погоду\" или вернитесь в \"Меню\". ";
+    private String m_ask = "Чтобы посмотреть погоду ещё раз, нажмите \"Узнать погоду\" или вернитесь в \"Меню\".";
     List<String> keyboard = new ArrayList<>();
     private String key;
     public WCityСyrcle(){

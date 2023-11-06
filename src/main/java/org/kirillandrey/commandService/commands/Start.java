@@ -15,18 +15,14 @@ public class Start implements Command {
     @Override
     public String execute(Long chatid, String[] args) {
         DateBaseHandler DBhendler = new DateBaseHandler();
-        if (DBhendler.userIsDB(chatid) == true){
-            resault = "Вы успешно авторизованы.";
-        } else {
-            try {
-                DBhendler.singUpUser("?", "?",
-                        chatid);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-            resault = "Вы успешно зарегестрированы.";
+        String code = DBhendler.signUpUser("?", "?",
+                chatid);
+        if (code.equals("1")) {
+            return "Вы успешно зарегистрированы";
+        } else if (code.equals("0")){
+            return "Ошибка регистрации";
         }
-        return resault;
+        return "Вы успешно авторизованы";
     }
     public String getInfo(){
         return info;

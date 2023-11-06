@@ -11,8 +11,13 @@ public class WCity implements Dialog {
 
     List<String> keyboard = new ArrayList<>();
     private String key = "узнать погоду";
+    public WCity() {
+        keyboard.add("Назад");
+    }
     @Override
     public String ask(List<String> button) {
+        button.clear();
+        button.addAll(keyboard);
         return m_ask;
     }
 
