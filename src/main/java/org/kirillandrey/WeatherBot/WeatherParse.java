@@ -24,13 +24,14 @@ import java.util.Locale;
 
 public class WeatherParse {
 
-    private final static String API_CALL_TEMPLATE = "https://api.openweathermap.org/data/2.5/forecast?q=";
-    private static String dotenv = "7c62968a0badd83d507275a3f5104444";
+    private  static String API_CALL_TEMPLATE = "https://api.openweathermap.org/data/2.5/forecast?q=";
+    private static Dotenv dotenv = Dotenv.load();
+    private static String apikey = dotenv.get("apiWeatherKey");
 
-    private final static String API_KEY_TEMPLATE = "&units=metric&APPID=" + dotenv;
-    private final static String USER_AGENT = "Mozilla/5.0";
-    private final static DateTimeFormatter INPUT_DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    private final static DateTimeFormatter OUTPUT_DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("MMM-dd HH:mm", Locale.US);
+    private static String API_KEY_TEMPLATE = "&units=metric&APPID=" + apikey;
+    private static String USER_AGENT = "Mozilla/5.0";
+    private static DateTimeFormatter INPUT_DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static DateTimeFormatter OUTPUT_DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("MMM-dd HH:mm", Locale.US);
 
     public static String getReadyForecast(String city) {
         String result;
@@ -72,7 +73,7 @@ public class WeatherParse {
         return response.toString();
     }
 
-    private static String parsePojo(String Json, String city) throws Exception {
+    protected static String parsePojo(String Json, String city) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
@@ -103,7 +104,7 @@ public class WeatherParse {
         return sb.toString();
     }
 
-    private static String formatForecastData(String dateTime, String description, double temperature) throws Exception {
+    protected static String formatForecastData(String dateTime, String description, double temperature) throws Exception {
         LocalDateTime forecastDateTime = LocalDateTime.parse(dateTime.replaceAll("\"", ""), INPUT_DATE_TIME_FORMAT);
         String formattedDateTime = forecastDateTime.format(OUTPUT_DATE_TIME_FORMAT);
 
