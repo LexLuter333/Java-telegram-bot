@@ -1,25 +1,25 @@
-package org.kirillandrey.config;
+package org.kirillandrey.service;
 
 import io.github.cdimascio.dotenv.Dotenv;
+import org.kirillandrey.config.DBConfig;
 
-public class DBConfig {
-    private String dbHost;
-    private String dbPort;
-    private String dbUser;
-    private String dbPass;
-    private String dbName;
-    private String dbTableName;
+public class DBConfigTest extends DBConfig {
+    String dbHost;
+    String dbPort;
+    String dbUser;
+    String dbPass;
+    String dbName;
+    String dbTableName;
 
-    public DBConfig() {
+    public DBConfigTest() {
         Dotenv dotenv = Dotenv.load();
-        this.dbHost = dotenv.get("dbHost");
-        this.dbPort = dotenv.get("dbPort");
-        this.dbUser = dotenv.get("dbUser");
-        this.dbPass = dotenv.get("dbPass");
-        this.dbName = dotenv.get("dbName");
-        this.dbTableName = dotenv.get("dbTableName");
+        this.dbHost = dotenv.get("dbHostTest");
+        this.dbPort = dotenv.get("dbPortTest");
+        this.dbUser = dotenv.get("dbUserTest");
+        this.dbPass = dotenv.get("dbPassTest");
+        this.dbName = dotenv.get("dbNameTest");
+        this.dbTableName = dotenv.get("dbTableNameTest");
     }
-
     public String getdbHost() {
         return this.dbHost;
     }
@@ -69,7 +69,7 @@ public class DBConfig {
     }
     public DBConfig clone(DBConfig original) {
         DBConfig cloned = new DBConfig();
-        cloned.setdbHost(original.getdbHost());
+        this.setdbHost(original.getdbHost());
         cloned.setdbPort(original.getdbPort());
         cloned.setdbUser(original.getdbUser());
         cloned.setdbPass(original.getdbPass());

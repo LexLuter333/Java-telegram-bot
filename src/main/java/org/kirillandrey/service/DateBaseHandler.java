@@ -10,11 +10,11 @@ import org.kirillandrey.config.DBConfig;
 import org.kirillandrey.config.DBConst;
 
 public class DateBaseHandler {
-    private final DBConfig dbConfig;
+    private DBConfig dbConfig;
     private Connection dbConnection;
 
-    public DateBaseHandler(DBConfig dbConfig) {
-        this.dbConfig = dbConfig;
+    public DateBaseHandler(DBConfig _dbConfig_) {
+        this.dbConfig = new DBConfig().clone(_dbConfig_);
     }
 
     public DateBaseHandler() {
@@ -31,7 +31,7 @@ public class DateBaseHandler {
             return dbConnection;
         }
 
-        String connectionString = "jdbc:mysql://" + dbConfig.getdbHost() + ":" + dbConfig.getdbPort() + "/" + dbConfig.getdbName();
+        String connectionString = "jdbc:mysql://" + dbConfig.getdbHost() + ":" + dbConfig.getdbPort() + "/" + dbConfig.getdbName() + "?useSSL=false";
         Class.forName("com.mysql.cj.jdbc.Driver");
 
         dbConnection = DriverManager.getConnection(connectionString, dbConfig.getdbUser(), dbConfig.getdbPass());
@@ -40,9 +40,9 @@ public class DateBaseHandler {
 
     public String signUpUser(String firstName, String secondName, Long chatId) {
         if (!userInDB(chatId)) {
-            String insert = "INSERT INTO " + DBConst.USER_TABLE + "(" + DBConst.USER_CHATID + ","
+            String insert = "INSERT INTO " + dbConfig.getdbTableName() + "(" + DBConst.USER_CHATID + ","
                     + DBConst.USER_FIRSTNAME + "," + DBConst.USER_SECONDNAME +
-                    "," + DBConst.USER_STATE + ")" + "VALUES(?,?,?,?)";
+                    "," + DBConst.USER_STATE + "," + DBConst.USER_SETTINGS + ")" + "VALUES(?,?,?,?,?)";
 
             try (Connection connection = dbGetConnection();
                  PreparedStatement prSt = connection.prepareStatement(insert)) {
@@ -50,6 +50,8 @@ public class DateBaseHandler {
                 prSt.setString(2, firstName != null ? firstName : "?");
                 prSt.setString(3, secondName != null ? secondName : "?");
                 prSt.setString(4, "0");
+                prSt.setString(5, "00000000000");
+
                 prSt.executeUpdate();
             } catch (SQLException | ClassNotFoundException e) {
                 e.printStackTrace();
@@ -61,7 +63,7 @@ public class DateBaseHandler {
     }
 
     public boolean userInDB(Long chatId) {
-        String selectQuery = "SELECT " + DBConst.USER_ID + " FROM " + DBConst.USER_TABLE + " WHERE " + DBConst.USER_CHATID + "=?";
+        String selectQuery = "SELECT " + DBConst.USER_ID + " FROM " + dbConfig.getdbTableName() + " WHERE " + DBConst.USER_CHATID + "=?";
 
         try (Connection connection = dbGetConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
@@ -77,7 +79,7 @@ public class DateBaseHandler {
     }
 
     public String getState(Long chatId) {
-        String selectQuery = "SELECT " + DBConst.USER_STATE + " FROM " + DBConst.USER_TABLE + " WHERE " + DBConst.USER_CHATID + "=?";
+        String selectQuery = "SELECT " + DBConst.USER_STATE + " FROM " + dbConfig.getdbTableName() + " WHERE " + DBConst.USER_CHATID + "=?";
 
         try (Connection connection = dbGetConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
@@ -95,7 +97,7 @@ public class DateBaseHandler {
     }
 
     public boolean setState(Long chatId, String newState) {
-        String updateQuery = "UPDATE " + DBConst.USER_TABLE + " SET " + DBConst.USER_STATE + "=? WHERE " + DBConst.USER_CHATID + "=?";
+        String updateQuery = "UPDATE " + dbConfig.getdbTableName() + " SET " + DBConst.USER_STATE + "=? WHERE " + DBConst.USER_CHATID + "=?";
 
         try (Connection connection = dbGetConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
