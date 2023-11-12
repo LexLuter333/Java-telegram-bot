@@ -4,8 +4,6 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.kirillandrey.config.DBConfig;
-import org.kirillandrey.config.DBConst;
-import org.kirillandrey.service.DateBaseHandler;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -14,7 +12,7 @@ import java.sql.SQLException;
 
 public class DateBaseHandlerTest {
     private DateBaseHandler dbHandler;
-    private DBConfig dbConfig = new DBConfig();
+    private DBConfig dbConfig = new DBConfigTest();
     private Connection connection;
 
     @Before
