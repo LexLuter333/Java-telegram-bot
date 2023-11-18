@@ -38,25 +38,23 @@ public class DateBaseHandler {
         return dbConnection;
     }
 
-    public String signUpUser(String firstName, String secondName, Long chatId) {
+    public String signUpUser(Long chatId) {
         if (!userInDB(chatId)) {
-            String insert = "INSERT INTO " + dbConfig.getdbTableName() + "(" + DBConst.USER_CHATID + ","
-                    + DBConst.USER_FIRSTNAME + "," + DBConst.USER_SECONDNAME +
-                    "," + DBConst.USER_STATE + "," + DBConst.USER_SETTINGS + "," + DBConst.USER_CITY + ")" + "VALUES(?,?,?,?,?,?)";
+            String insert = "INSERT INTO " + dbConfig.getdbTableName() + "(" + DBConst.USER_CHATID +
+                    "," + DBConst.USER_STATE + "," + DBConst.USER_SETTINGS + ")" + "VALUES(?,?,?)";
 
             try (Connection connection = dbGetConnection();
                  PreparedStatement prSt = connection.prepareStatement(insert)) {
                 prSt.setString(1, chatId.toString());
-                prSt.setString(2, firstName != null ? firstName : "?");
-                prSt.setString(3, secondName != null ? secondName : "?");
-                prSt.setString(4, "0");
-                prSt.setString(5, "00000000000");
-                prSt.setString(6, "?");
+                prSt.setString(2, "0");
+                prSt.setString(3, new SettingJson().toJson());
 
                 prSt.executeUpdate();
             } catch (SQLException | ClassNotFoundException e) {
                 e.printStackTrace();
                 return "0";
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
             return "1";
         }
@@ -112,5 +110,42 @@ public class DateBaseHandler {
             e.printStackTrace();
             return false;
         }
+    }
+    public boolean setSettings(Long chatId, SettingJson settings) {
+        String updateQuery = "UPDATE " + dbConfig.getdbTableName() + " SET " + DBConst.USER_SETTINGS + "=? WHERE " + DBConst.USER_CHATID + "=?";
+
+        try (Connection connection = dbGetConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
+            preparedStatement.setString(1, settings.toJson());
+            preparedStatement.setString(2, chatId.toString());
+
+            int rowsUpdated = preparedStatement.executeUpdate();
+
+            return rowsUpdated > 0;
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public SettingJson getSettings(Long chatId) {
+        String selectQuery = "SELECT " + DBConst.USER_SETTINGS + " FROM " + dbConfig.getdbTableName() + " WHERE " + DBConst.USER_CHATID + "=?";
+
+        try (Connection connection = dbGetConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
+            preparedStatement.setString(1, chatId.toString());
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    String settingsJson = resultSet.getString(DBConst.USER_SETTINGS);
+                    return SettingJson.fromJson(settingsJson);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

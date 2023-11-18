@@ -15,8 +15,7 @@ public class Start implements Command {
     @Override
     public String execute(Long chatid, String[] args) {
         DateBaseHandler DBhendler = new DateBaseHandler();
-        String code = DBhendler.signUpUser("?", "?",
-                chatid);
+        String code = DBhendler.signUpUser(chatid);
         if (code.equals("1")) {
             return "Вы успешно зарегистрированы";
         } else if (code.equals("0")){

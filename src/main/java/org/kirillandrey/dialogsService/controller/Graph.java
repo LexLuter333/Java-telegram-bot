@@ -1,9 +1,7 @@
 package org.kirillandrey.dialogsService.controller;
 
-import org.kirillandrey.dialogsService.dialogs.ErrorInput;
-import org.kirillandrey.dialogsService.dialogs.Menu;
-import org.kirillandrey.dialogsService.dialogs.WCity;
-import org.kirillandrey.dialogsService.dialogs.WCityСyrcle;
+import org.kirillandrey.dialogsService.dialogs.*;
+import org.kirillandrey.dialogsService.dialogs.Settings.*;
 
 import java.util.HashMap;
 
@@ -11,17 +9,36 @@ public class Graph {
     private HashMap<String, Dialog> Table = new HashMap<>();
     private HashMap<String, Node> nodes;
     private int [][] adjacencyMatrix = {
-            {0, 1, 0, 1},
-            {0, 0, 1, 0},
-            {1, 1, 0, 1},
-            {1, 0, 0, 1},
+            {0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+
     };
 
     public Graph() {
         Table.put("0", new Menu());
         Table.put("1", new WCity());
         Table.put("2", new WCityСyrcle());
-        Table.put("3", new ErrorInput());
+        Table.put("3", new Settings());
+        Table.put("4", new DefaultSettings());
+        Table.put("5", new Settings1());
+        Table.put("6", new Settings2());
+        Table.put("7", new Settings3());
+        Table.put("8", new Settings4());
+        Table.put("9", new Settings5());
+        Table.put("10", new Settings6());
+        Table.put("11", new Settings7());
+        Table.put("12", new ErrorInput());
 
         nodes = new HashMap<>();
 

@@ -1,5 +1,6 @@
 package org.kirillandrey.JSON;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.annotation.Generated;
@@ -28,8 +29,16 @@ public class Weather {
     private String description;
     @JsonProperty("icon")
     private String icon;
+    private HashMap <String, String> locate = new HashMap<>();
     @JsonIgnore
     private Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
+    public String getlocate(String weather){
+        locate.put("Clear", "Ясно ☀");
+        locate.put("Rain", "Дождь ☔");
+        locate.put("Snow", "Снег ❄");
+        locate.put("Clouds", "Облачно ☁");
+        return locate.get(weather);
+    }
 
     @JsonProperty("id")
     public Integer getId() {

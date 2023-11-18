@@ -2,6 +2,7 @@ package org.kirillandrey.dialogsService.dialogs;
 
 import org.kirillandrey.WeatherBot.WeatherParse;
 import org.kirillandrey.dialogsService.controller.Dialog;
+import org.kirillandrey.service.DateBaseHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,7 @@ public class WCity implements Dialog {
         keyboard.add("Назад");
     }
     @Override
-    public String ask(List<String> button) {
+    public String ask(Long chatid, List<String> button) {
         button.clear();
         button.addAll(keyboard);
         return m_ask;
@@ -23,7 +24,7 @@ public class WCity implements Dialog {
 
     @Override
     public String answer(String message, Long chatid) {
-        return WeatherParse.getReadyForecast(message);
+        return WeatherParse.getReadyForecast(message, new DateBaseHandler().getSettings(chatid));
     }
 
     @Override

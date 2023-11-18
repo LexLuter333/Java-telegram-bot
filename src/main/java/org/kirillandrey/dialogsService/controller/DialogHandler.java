@@ -30,6 +30,6 @@ public class DialogHandler {
     public String handleAskDialog(Long chatid, List<String> button){
         String state = new DateBaseHandler().getState(chatid);
         Node node = graphDialog.getNode(state);
-        return node.getData().ask(button);
+        return node.getData().ask(chatid, button);
     }
 }

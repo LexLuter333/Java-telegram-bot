@@ -2,6 +2,7 @@ package org.kirillandrey.commandService.commands;
 
 import org.kirillandrey.WeatherBot.WeatherParse;
 import org.kirillandrey.commandService.controller.Command;
+import org.kirillandrey.service.DateBaseHandler;
 
 public class Weather implements Command {
     private String resautl;
@@ -16,7 +17,7 @@ public class Weather implements Command {
                 City = City + args[i];
                 if (i != args.length-1) City = City + " ";
             }
-            resautl = WeatherParse.getReadyForecast(City);
+            resautl = WeatherParse.getReadyForecast(City, new DateBaseHandler().getSettings(chatid));
         } else {
             resautl = "Ошибка ввода локации (Пример: /weather Екатеринбург или Ekaterinburg)";
         }
