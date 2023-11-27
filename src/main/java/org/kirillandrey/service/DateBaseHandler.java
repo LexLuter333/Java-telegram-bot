@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 
 import org.kirillandrey.config.DBConfig;
 import org.kirillandrey.config.DBConst;
@@ -63,6 +64,21 @@ public class DateBaseHandler {
 
     public boolean userInDB(Long chatId) {
         String selectQuery = "SELECT " + DBConst.USER_ID + " FROM " + dbConfig.getdbTableName() + " WHERE " + DBConst.USER_CHATID + "=?";
+
+        try (Connection connection = dbGetConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
+            preparedStatement.setString(1, String.valueOf(chatId));
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                return resultSet.next();
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    public boolean userInNotificationTable(Long chatId) {
+        String selectQuery = "SELECT " + DBConst.USER_ID + " FROM " + dbConfig.getdbNotificTableName() + " WHERE " + DBConst.USER_CHATID + "=?";
 
         try (Connection connection = dbGetConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
@@ -147,5 +163,94 @@ public class DateBaseHandler {
             e.printStackTrace();
         }
         return null;
+    }
+    public void clearTest() {
+        String truncateQuery1 = "TRUNCATE TABLE " + dbConfig.getdbTableName();
+        String truncateQuery2 = "TRUNCATE TABLE " + dbConfig.getdbNotificTableName();
+        try {
+            Connection connection = dbGetConnection();
+            try (PreparedStatement preparedStatement1 = connection.prepareStatement(truncateQuery1)) {
+                preparedStatement1.executeUpdate();
+            }
+            try (PreparedStatement preparedStatement2 = connection.prepareStatement(truncateQuery2)) {
+                preparedStatement2.executeUpdate();
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+    public boolean addUserInNotificationTable(Long chatid, String time) {
+        if (!userInNotificationTable(chatid)) {
+            String insertQuery = "INSERT INTO " + dbConfig.getdbNotificTableName() + "(" + DBConst.USER_CHATID + ", " +
+                    DBConst.USER_TIME + ")" + " VALUES(?,?)";
+            try (Connection connection = dbGetConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
+                preparedStatement.setString(1, chatid.toString());
+                preparedStatement.setString(2, time);
+
+                preparedStatement.executeUpdate();
+                return true;
+            } catch (SQLException | ClassNotFoundException e) {
+                e.printStackTrace();
+                return false;
+            }
+        } else {
+            String updateQuery = "UPDATE " + dbConfig.getdbNotificTableName() +
+                    " SET " + DBConst.USER_TIME + "=? WHERE " + DBConst.USER_CHATID + "=?";
+
+            try (Connection connection = dbGetConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
+                preparedStatement.setString(1, time);
+                preparedStatement.setString(2, chatid.toString());
+
+                int rowsUpdated = preparedStatement.executeUpdate();
+                return rowsUpdated > 0;
+            } catch (SQLException | ClassNotFoundException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+    }
+
+
+    public boolean removeUserFromNotificationTable(Long chatid) {
+        if (userInNotificationTable(chatid)){
+        String deleteQuery = "DELETE FROM " + dbConfig.getdbNotificTableName() + " WHERE " + DBConst.USER_CHATID + "=?";
+
+        try (Connection connection = dbGetConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery)) {
+            preparedStatement.setString(1, chatid.toString());
+
+            int rowsDeleted = preparedStatement.executeUpdate();
+            return rowsDeleted > 0;
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+        return false;
+    }
+    public HashMap<String, String> getTimesForAlerts() {
+        HashMap<String, String> result = new HashMap<>();
+
+        String selectQuery = "SELECT " + DBConst.USER_CHATID + ", " + DBConst.USER_TIME +
+                " FROM " + dbConfig.getdbNotificTableName();
+
+        try (Connection connection = dbGetConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            while (resultSet.next()) {
+                String chatId = resultSet.getString(DBConst.USER_CHATID);
+                String time = resultSet.getString(DBConst.USER_TIME);
+
+                result.put(chatId, time);
+            }
+
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return result;
     }
 }

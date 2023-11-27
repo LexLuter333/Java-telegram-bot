@@ -1,5 +1,6 @@
 package org.kirillandrey;
 
+import org.kirillandrey.alerts.Alerts;
 import org.kirillandrey.config.BotConfig;
 import org.kirillandrey.dialogsService.controller.Graph;
 import org.kirillandrey.service.TelegramBot;
@@ -19,5 +20,10 @@ public class Main {
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
+
+        Alerts runneble = new Alerts();
+        Thread thread = new Thread(runneble);
+        thread.start();
+
     }
 }

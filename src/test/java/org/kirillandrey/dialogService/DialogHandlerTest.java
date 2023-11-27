@@ -3,15 +3,19 @@ package org.kirillandrey.dialogService;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+import org.kirillandrey.config.DBConfig;
 import org.kirillandrey.dialogsService.controller.DialogHandler;
+import org.kirillandrey.service.DBConfigTest;
 import org.kirillandrey.service.DateBaseHandler;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DialogHandlerTest {
     private DialogHandler dialogHandler;
-
+    private DBConfig dbConfig = new DBConfigTest();
+    private DateBaseHandler dbHandler = new DateBaseHandler(dbConfig);
     @Before
     public void setUp() {
         dialogHandler = new DialogHandler();
@@ -20,9 +24,8 @@ public class DialogHandlerTest {
     @Test
     public void testHandleAnswerDialog() {
         // Подготовьте данные в базе данных, чтобы установить начальное состояние чата
-        DateBaseHandler dbHandler = new DateBaseHandler();
         Long chatId = 12345L;
-        dbHandler.signUpUser("John", "Doe", chatId);
+        dbHandler.signUpUser(chatId);
         dbHandler.setState(chatId, "1");
 
         // Теперь мы можем протестировать метод handleAnswerDialog
@@ -34,16 +37,14 @@ public class DialogHandlerTest {
         String response2 = dialogHandler.handleAnswerDialog("asdad", chatId);
         assertEquals("", response2);
         String state2 = dbHandler.getState(chatId);
-        assertEquals("3", state2);
+        assertEquals("12", state2);
     }
 
     @Test
     public void testHandleAskDialog() {
 
-        DateBaseHandler dbHandler = new DateBaseHandler();
-
         Long chatId1 = 54321L;
-        dbHandler.signUpUser("Alice", "Smith", chatId1);
+        dbHandler.signUpUser(chatId1);
         dbHandler.setState(chatId1, "0");
         List<String> button1 = new ArrayList<>();
 
@@ -52,7 +53,7 @@ public class DialogHandlerTest {
         assertEquals(List.of("Узнать погоду", "Настройки"), button1);
 
         Long chatId2 = 72872L;
-        dbHandler.signUpUser("Flin", "Greck", chatId2);
+        dbHandler.signUpUser(chatId2);
         dbHandler.setState(chatId1, "2");
         List<String> button2 = new ArrayList<>();
 
@@ -61,8 +62,8 @@ public class DialogHandlerTest {
         assertEquals(List.of("Узнать погоду", "Меню"), button2);
 
         Long chatId3 = 84720L;
-        dbHandler.signUpUser("Jhon", "Felix", chatId3);
-        dbHandler.setState(chatId1, "3");
+        dbHandler.signUpUser(chatId3);
+        dbHandler.setState(chatId1, "12");
         List<String> button3 = new ArrayList<>();
 
         String response3 = dialogHandler.handleAskDialog(chatId1, button3);

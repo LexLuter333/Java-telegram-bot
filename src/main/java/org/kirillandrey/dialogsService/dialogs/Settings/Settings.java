@@ -28,6 +28,7 @@ public class Settings implements Dialog {
                 "   5) Ветер [" + settingJson.getWind() + "]\n" +
                 "   6) Город по умолчанию [" + settingJson.getCity() + "]\n" +
                 "   7) Уведомления [" + settingJson.getNotifications() + "]\n" +
+                "   8) Время ежедневного уведомления [" + settingJson.getTime() + "]\n" +
                 "Выберите пункт (цифру) настроек, чтобы изменить его.";
         return m_ask;
     }

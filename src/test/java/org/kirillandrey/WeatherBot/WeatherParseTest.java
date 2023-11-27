@@ -1,5 +1,7 @@
 package org.kirillandrey.WeatherBot;
 import org.junit.jupiter.api.Test;
+import org.kirillandrey.service.SettingJson;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class WeatherParseTest {
@@ -8,7 +10,7 @@ public class WeatherParseTest {
     public void testGetReadyForecast() {
         // Тест на успешное получение прогноза для существующего города
         String city = "Moscow";
-        String forecast = WeatherParse.getReadyForecast(city);
+        String forecast = WeatherParse.getReadyForecast(city, new SettingJson());
         assertNotNull(forecast);
         assertFalse(forecast.isEmpty());
     }
@@ -32,27 +34,11 @@ public class WeatherParseTest {
         String json = "{\"city\": {\"name\": \"Moscow\"}, \"list\": []}";
         String city = "Moscow";
         try {
-            String parsedData = WeatherParse.parsePojo(json, city);
+            String parsedData = WeatherParse.parsePojo(json, city, new SettingJson());
             assertNotNull(parsedData);
             assertFalse(parsedData.isEmpty());
         } catch (Exception e) {
             fail("Exception should not be thrown for valid JSON data");
-        }
-    }
-
-    @Test
-    public void testFormatForecastData() {
-        // Тест на успешное форматирование данных прогноза
-        String dateTime = "2023-11-06 12:00:00";
-        String description = "Clear";
-        double temperature = 25.5;
-
-        try {
-            String formattedData = WeatherParse.formatForecastData(dateTime, description, temperature);
-            assertNotNull(formattedData);
-            assertFalse(formattedData.isEmpty());
-        } catch (Exception e) {
-            fail("Exception should not be thrown for valid data");
         }
     }
 }
