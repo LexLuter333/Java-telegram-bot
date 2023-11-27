@@ -34,6 +34,8 @@ public class Settings7 implements Dialog {
                 return "Вы включили уведомление";
             } else if (message.equalsIgnoreCase("выключить") && settingJson.getNotifications().equals("Вкл")) {
                 settingJson.setNotifications("Выкл");
+                settingJson.setTime("Не задано");
+                dateBaseHandler.removeUserFromNotificationTable(chatid);
                 dateBaseHandler.setSettings(chatid, settingJson);
                 return "Вы выключили уведомление";
             }

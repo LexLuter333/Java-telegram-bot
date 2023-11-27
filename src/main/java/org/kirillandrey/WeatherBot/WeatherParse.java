@@ -24,7 +24,6 @@ public class WeatherParse {
 
     private static String API_KEY_TEMPLATE = "&units=metric&APPID=" + apikey;
     private static String USER_AGENT = "Mozilla/5.0";
-    private static DateTimeFormatter INPUT_DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", new Locale("ru", "RU"));
     private static DateTimeFormatter OUTPUT_DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("dd MMMM", new Locale("ru", "RU"));
 
     public static String getReadyForecast(String city, SettingJson settings) {
@@ -138,6 +137,4 @@ public class WeatherParse {
             return false;
         }
     }
-
-
 }

@@ -9,6 +9,7 @@ public class DBConfig {
     private String dbPass;
     private String dbName;
     private String dbTableName;
+    private String dbNotificTableName;
 
     public DBConfig() {
         Dotenv dotenv = Dotenv.load();
@@ -18,6 +19,7 @@ public class DBConfig {
         this.dbPass = dotenv.get("dbPass");
         this.dbName = dotenv.get("dbName");
         this.dbTableName = dotenv.get("dbTableName");
+        this.dbNotificTableName = dotenv.get("dbNotificTableName");
     }
 
     public String getdbHost() {
@@ -67,6 +69,13 @@ public class DBConfig {
     public void setdbTableName(String dbTableName) {
         this.dbTableName = dbTableName;
     }
+    public String getdbNotificTableName() {
+        return this.dbNotificTableName;
+    }
+
+    public void setdbNotificTable(String dbNotificTable) {
+        this.dbNotificTableName = dbNotificTable;
+    }
     public DBConfig clone(DBConfig original) {
         DBConfig cloned = new DBConfig();
         cloned.setdbHost(original.getdbHost());
@@ -75,6 +84,7 @@ public class DBConfig {
         cloned.setdbPass(original.getdbPass());
         cloned.setdbName(original.getdbName());
         cloned.setdbTableName(original.getdbTableName());
+        cloned.setdbNotificTable(original.getdbNotificTableName());
         return cloned;
     }
 }
