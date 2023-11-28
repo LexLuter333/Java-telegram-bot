@@ -29,6 +29,12 @@ public class Settings9 implements Dialog {
                 try {
                     settingJson.setTimezone(String.valueOf(number));
                     dateBaseHandler.setSettings(chatid, settingJson);
+                    if (!settingJson.getTime().equals("Не задано") && settingJson.getNotifications().equals("Вкл")) {
+                        String[] time = settingJson.getTime().split(":");
+                        int newhour = Math.abs((number - 5) + Integer.parseInt(time[0])) % 24;
+                        time[0] = String.valueOf(newhour);
+                        dateBaseHandler.addUserInNotificationTable(chatid, time[0] + ":" + time[1]);
+                    }
                     dateBaseHandler.setState(chatid, "3");
                     return "Вы успешно изменили ваш часовой пояс";
                 } catch (DateTimeParseException e) {

@@ -36,7 +36,7 @@ public class SettingJson {
         this.city = "Не задан";
         this.notifications = "Выкл";
         this.time = "Не задано";
-        this.timezone = "Не задано";
+        this.timezone = "0";
     }
     public String getTemperature() {
         return temperature;

@@ -30,7 +30,12 @@ public class Settings8 implements Dialog {
             LocalTime parsedTime = LocalTime.parse(message, formatter);
             settingJson.setTime(parsedTime.toString());
             dateBaseHandler.setSettings(chatid, settingJson);
-            dateBaseHandler.addUserInNotificationTable(chatid, parsedTime.toString());
+            if (settingJson.getNotifications().equals("Вкл")) {
+                String[] time = parsedTime.toString().split(":");
+                int newhour = Math.abs((5 - Integer.parseInt(settingJson.getTimezone())) + Integer.parseInt(time[0])) % 24;
+                time[0] = String.valueOf(newhour);
+                dateBaseHandler.addUserInNotificationTable(chatid, time[0] + ":" + time[1]);
+            }
             dateBaseHandler.setState(chatid, "3");
             return "Вы успешно изменили время отправки уведомлений";
         } catch (DateTimeParseException e) {

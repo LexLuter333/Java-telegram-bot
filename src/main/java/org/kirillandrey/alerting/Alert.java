@@ -1,4 +1,4 @@
-package org.kirillandrey.alerts;
+package org.kirillandrey.alerting;
 
 import org.kirillandrey.WeatherBot.WeatherParse;
 import org.kirillandrey.config.BotConfig;
@@ -14,18 +14,20 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class Alerts implements Runnable {
+public class Alert implements Runnable {
 
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private final DateBaseHandler dbHandler = new DateBaseHandler(); // Создаем объект для работы с базой данных
-
-    public void startAlerts() {
+    private TelegramBot bot;
+    public Alert(TelegramBot bot){
+        this.bot = bot;
+    }
+    public void startAlert() {
         scheduler.scheduleAtFixedRate(this, 0, 1, TimeUnit.DAYS); // Запускаем задачу каждый день
     }
 
     @Override
     public void run() {
-        TelegramBot bot = new TelegramBot(new BotConfig());
         while (true) {
             // Получаем текущее время
             Date dateNow = new Date();
@@ -51,7 +53,7 @@ public class Alerts implements Runnable {
 
     }
 
-    public void stopAlerts() {
+    public void stopAlert() {
         scheduler.shutdown();
     }
 }

@@ -30,12 +30,17 @@ public class Settings7 implements Dialog {
             dateBaseHandler.setState(chatid, "3");
             if (message.equalsIgnoreCase("включить") && settingJson.getNotifications().equals("Выкл")) {
                 settingJson.setNotifications("Вкл");
+                if (!settingJson.getTime().equals("Не задано")) {
+                    String[] time = settingJson.getTime().split(":");
+                    int newhour = Math.abs((Integer.parseInt(settingJson.getTimezone()) - 5) + Integer.parseInt(time[0])) % 24;
+                    time[0] = String.valueOf(newhour);
+                    dateBaseHandler.addUserInNotificationTable(chatid, time[0] + ":" + time[1]);
+                }
                 dateBaseHandler.setSettings(chatid, settingJson);
                 return "Вы включили уведомление";
             } else if (message.equalsIgnoreCase("выключить") && settingJson.getNotifications().equals("Вкл")) {
                 settingJson.setNotifications("Выкл");
-                settingJson.setTime("Не задано");
-                dateBaseHandler.removeUserFromNotificationTable(chatid);
+                        dateBaseHandler.removeUserFromNotificationTable(chatid);
                 dateBaseHandler.setSettings(chatid, settingJson);
                 return "Вы выключили уведомление";
             }

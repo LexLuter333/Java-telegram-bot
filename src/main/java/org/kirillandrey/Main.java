@@ -1,8 +1,7 @@
 package org.kirillandrey;
 
-import org.kirillandrey.alerts.Alerts;
+import org.kirillandrey.alerting.Alert;
 import org.kirillandrey.config.BotConfig;
-import org.kirillandrey.dialogsService.controller.Graph;
 import org.kirillandrey.service.TelegramBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -21,7 +20,7 @@ public class Main {
             e.printStackTrace();
         }
 
-        Alerts runneble = new Alerts();
+        Alert runneble = new Alert(bot);
         Thread thread = new Thread(runneble);
         thread.start();
 
