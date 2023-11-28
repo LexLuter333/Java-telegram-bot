@@ -3,9 +3,19 @@ package org.kirillandrey.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * Класс SettingJson работает с настройками вывода информации о погоде.
+ * Класс {@code SettingJson} работает с настройками вывода информации о погоде.
  * Геттеры и сеттеры реализуют стандартный подход.
-*/
+ * Поля:
+ * 1) Температура
+ * 2) Давление
+ * 3) Влажность
+ * 4) Общая погода
+ * 5) Ветер
+ * 6) Город по умолчанию
+ * 7) Уведомления
+ * 8) Время отправки уведомлений
+ * 9) Часовой пояс UTC (относительно Гринвича)
+ */
 
 public class SettingJson {
     private String temperature;
@@ -16,6 +26,7 @@ public class SettingJson {
     private String city;
     private String notifications;
     private String time;
+    private String timezone;
     public SettingJson() {
         this.temperature = "Вкл";
         this.pressure = "Вкл";
@@ -25,6 +36,7 @@ public class SettingJson {
         this.city = "Не задан";
         this.notifications = "Выкл";
         this.time = "Не задано";
+        this.timezone = "Не задано";
     }
     public String getTemperature() {
         return temperature;
@@ -87,9 +99,16 @@ public class SettingJson {
     public void setTime(String time) {
         this.time = time;
     }
+    public String getTimezone() {
+        return timezone;
+    }
+
+    public void setTimezone(String timezone) {
+        this.timezone = timezone;
+    }
 
     /**
-     * Метод преобразования Json объекта в текущий класс
+     * Метод fromJson преобразования Json объекта в текущий класс
      * @param json
      * @return объект этого класса
      * @throws Exception
@@ -100,7 +119,7 @@ public class SettingJson {
     }
 
     /**
-     * Метод для превращения объекта класса в Json
+     * Метод toJson для превращения объекта класса в Json
      * @return json в формате Srting
      * @throws Exception
      */

@@ -15,12 +15,19 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
+/**
+ * Класс {@code TelegramBot} представляет собой телеграм-бот, обрабатывающий сообщения и команды от пользователей.
+ */
 public class TelegramBot extends TelegramLongPollingBot {
     private BotConfig config;
     private CommandHandler commandHandler;
     private DialogHandler dialogHandler;
 
+    /**
+     * Конструктор класса {@code TelegramBot}.
+     *
+     * @param config конфигурация бота
+     */
     public TelegramBot(BotConfig config) {
 
         this.config = config;
@@ -56,6 +63,13 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
+    /**
+     * Отправляет сообщение пользователю.
+     *
+     * @param chatID      идентификатор чата пользователя
+     * @param textToSend  текст сообщения
+     * @param button      список кнопок для клавиатуры
+     */
     public void sendMessage(long chatID, String textToSend, List<String> button){
 
         SendMessage msg = new SendMessage();
@@ -69,6 +83,13 @@ public class TelegramBot extends TelegramLongPollingBot {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Создает клавиатуру для сообщения.
+     *
+     * @param button список кнопок
+     * @return объект клавиатуры
+     */
     private ReplyKeyboardMarkup createKeyboard(List<String> button) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         replyKeyboardMarkup.setSelective(true);

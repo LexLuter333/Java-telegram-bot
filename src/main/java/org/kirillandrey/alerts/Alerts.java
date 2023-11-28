@@ -1,15 +1,10 @@
 package org.kirillandrey.alerts;
 
-import org.kirillandrey.JSON.Sys;
 import org.kirillandrey.WeatherBot.WeatherParse;
 import org.kirillandrey.config.BotConfig;
 import org.kirillandrey.service.DateBaseHandler;
 import org.kirillandrey.service.SettingJson;
 import org.kirillandrey.service.TelegramBot;
-import org.telegram.telegrambots.meta.TelegramBotsApi;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;

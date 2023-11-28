@@ -15,10 +15,12 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
-
+/**
+ * Класс, отвечающий за получение и обработку погодных данных из API OpenWeather
+ */
 public class WeatherParse {
 
-    private  static String API_CALL_TEMPLATE = "https://api.openweathermap.org/data/2.5/forecast?q=";
+    private static String API_CALL_TEMPLATE = "https://api.openweathermap.org/data/2.5/forecast?q=";
     private static Dotenv dotenv = Dotenv.load();
     private static String apikey = dotenv.get("apiWeatherKey");
 
@@ -26,6 +28,13 @@ public class WeatherParse {
     private static String USER_AGENT = "Mozilla/5.0";
     private static DateTimeFormatter OUTPUT_DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("dd MMMM", new Locale("ru", "RU"));
 
+    /**
+     * Получает прогноз погоды для указанного города и настроек.
+     *
+     * @param city     город
+     * @param settings настройки вывода информации о погоде
+     * @return строка с отформатированным прогнозом погоды
+     */
     public static String getReadyForecast(String city, SettingJson settings) {
         String result;
 
@@ -41,6 +50,14 @@ public class WeatherParse {
         }
         return result;
     }
+
+    /**
+     * Загружает сырые данные JSON о погоде.
+     *
+     * @param city город
+     * @return строка с сырыми данными JSON
+     * @throws Exception если произошла ошибка при загрузке данных
+     */
     public static String downloadJsonRawData(String city) throws Exception {
         String urlString = API_CALL_TEMPLATE + city + API_KEY_TEMPLATE;
         URL urlObject = new URL(urlString);
@@ -64,6 +81,15 @@ public class WeatherParse {
         return response.toString();
     }
 
+    /**
+     * Преобразует сырые данные JSON в отформатированный прогноз погоды.
+     *
+     * @param Json сырые данные JSON
+     * @param city        город
+     * @param settings    настройки вывода информации о погоде
+     * @return строка с отформатированным прогнозом погоды
+     * @throws Exception если произошла ошибка при парсинге данных
+     */
     protected static String parsePojo(String Json, String city, SettingJson settings) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
@@ -89,6 +115,14 @@ public class WeatherParse {
         return sb.toString();
     }
 
+    /**
+     * Форматирует данные прогноза погоды.
+     *
+     * @param list     объект с данными о погоде
+     * @param settings настройки вывода информации о погоде
+     * @return отформатированные данные прогноза погоды
+     * @throws Exception если произошла ошибка при форматировании данных
+     */
     protected static String formatForecastData(org.kirillandrey.JSON.List list , SettingJson settings ) throws Exception {
         Main main = list.getMain();
         StringBuilder sb = new StringBuilder();
@@ -123,6 +157,13 @@ public class WeatherParse {
 
         return sb.toString();
     }
+
+    /**
+     * Проверяет, что указанный город существует в сервисе погоды.
+     *
+     * @param city город
+     * @return true, если город существует, в противном случае - false
+     */
     public boolean checkCity(String city) {
         try {
             String jsonRawData = downloadJsonRawData(city);
@@ -132,7 +173,6 @@ public class WeatherParse {
             // Проверяем, что в ответе есть данные о погоде для указанного города
             return example != null && example.getList() != null && !example.getList().isEmpty();
         } catch (Exception e) {
-            // Обрабатываем исключения, если произошла ошибка при проверке города
             e.printStackTrace();
             return false;
         }
