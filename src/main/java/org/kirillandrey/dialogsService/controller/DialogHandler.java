@@ -38,7 +38,7 @@ public class DialogHandler {
         if (new DateBaseHandler().setState(chatid, nextNode.getKeyState())) {
             return node.getData().answer(command, chatid);
         }
-        return "Ошибка, попробуйте позже";
+        return "";
     }
     /**
      * Обрабатывает вопрос пользователю в диалоге
