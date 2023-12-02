@@ -27,7 +27,7 @@ public class TemperatureAdvice {
         if (countTemp > 0){
             result = "0" + countTemp;
         } else if (countTemp < 0) {
-            result = "1" + countTemp;
+            result = "1" + Math.abs(countTemp);
         } else {
             result = String.valueOf(countTemp);
         }

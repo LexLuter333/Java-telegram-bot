@@ -158,7 +158,6 @@ public class Alert implements Runnable {
         if (weather != null && !weather.equals("")){
             sb.append(weather + "\n");
         }
-        System.out.println(sb.toString());
         return sb.toString();
     }
 

@@ -8,7 +8,7 @@ public class WeatherAdvice {
     private static HashMap<String, String> mapWethAdvice = new HashMap<>();
 
     public WeatherAdvice(){
-        mapWethAdvice.put("Rain", "- Сегодня возможен дождь советуем взять зонтик.");
+        mapWethAdvice.put("Rain", "- Сегодня возможен дождь, советуем взять зонтик.");
         mapWethAdvice.put("Snow", "- Сегодня будет снег, будьте аккуратнее.");
         mapWethAdvice.put("Clouds", "");
         mapWethAdvice.put("Clear", "");
