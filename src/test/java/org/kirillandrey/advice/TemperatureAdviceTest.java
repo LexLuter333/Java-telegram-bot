@@ -5,40 +5,40 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TemperatureAdviceTest {
-
+    private TemperatureAdvice temperatureAdvice = new TemperatureAdvice();
     @Test
     void testHotTemperatureAdvice() {
-        String advice = TemperatureAdvice.tempAdvice(29);
-        assertEquals("- Сегодня будет жарко, не забывайте надеть головной убор и пейте больше жидкости.", advice);
+        String advice = temperatureAdvice.tempAdvice(29);
+        assertEquals("- Сегодня хорошая прогулка для прогулки.", advice);
     }
 
     @Test
     void testModerateTemperatureAdvice() {
-        String advice = TemperatureAdvice.tempAdvice(15);
-        assertEquals("- Сегодня хорошая погода для прогулки.", advice);
+        String advice = temperatureAdvice.tempAdvice(15);
+        assertEquals("- Сегодня будет прохладно, советуем надеть ветровку.", advice);
     }
 
     @Test
     void testColdTemperatureAdvice() {
-        String advice = TemperatureAdvice.tempAdvice(-5);
-        assertEquals("- Сегодня очень холодно, советуем очень тепло одеться.", advice);
+        String advice = temperatureAdvice.tempAdvice(-5);
+        assertEquals("- Сегодня прохладно и возможен гололёд, советуем надеть шапку.", advice);
     }
 
     @Test
     void testZeroTemperatureAdvice() {
-        String advice = TemperatureAdvice.tempAdvice(0);
+        String advice = temperatureAdvice.tempAdvice(0);
         assertEquals("- Сегодня прохладно и возможен гололёд, советуем надеть шапку.", advice);
     }
 
     @Test
     void testNegativeTemperatureAdvice() {
-        String advice = TemperatureAdvice.tempAdvice(-10);
-        assertEquals("- Сегодня холодно, советуем одеться теплее.", advice);
+        String advice = temperatureAdvice.tempAdvice(-10);
+        assertEquals("- Сегодня прохладно, но если одеться теплее, то это хорошая погода для прогулки.", advice);
     }
 
     @Test
     void testNullTemperatureAdvice() {
-        String advice = TemperatureAdvice.tempAdvice(null);
+        String advice = temperatureAdvice.tempAdvice(null);
         assertEquals("", advice);
     }
 }

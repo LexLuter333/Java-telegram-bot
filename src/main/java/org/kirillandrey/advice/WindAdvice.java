@@ -7,7 +7,7 @@ public class WindAdvice {
 
     public WindAdvice(){
         mapWindAdvice.put(5, "");
-        mapWindAdvice.put(12, "- Cегодня слиный ветер, будьте аккуратнее.");
+        mapWindAdvice.put(12, "- Cегодня сильный ветер, будьте аккуратнее.");
         mapWindAdvice.put(24, "- Сегодня очень сильный ветер, не берите с собой вещи которые будет тяжело удержать.");
         mapWindAdvice.put(36, "- Сегодня штормовой ветер, не советуем выходить из дома.");
 
@@ -20,8 +20,12 @@ public class WindAdvice {
         if (wind < 5){
             return mapWindAdvice.get(5);
         } else {
+            if (wind > 36){
+                return mapWindAdvice.get(36);
+            }
             if (wind % 12 != 0){
                 wind += (12 - wind % 12);
+                System.out.println(wind);
             }
 
             return mapWindAdvice.get(wind);

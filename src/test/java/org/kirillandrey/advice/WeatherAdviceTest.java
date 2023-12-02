@@ -7,12 +7,12 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class WeatherAdviceTest {
-
+    private WeatherAdvice weatherAdvice = new WeatherAdvice();
     @Test
     void testRainAdvice() {
         ArrayList<String> weatherConditions = new ArrayList<>();
         weatherConditions.add("Rain");
-        String advice = WeatherAdvice.weathAdvice(weatherConditions);
+        String advice = weatherAdvice.weathAdvice(weatherConditions);
         assertEquals("- Сегодня возможен дождь, советуем взять зонтик.", advice);
     }
 
@@ -20,7 +20,7 @@ class WeatherAdviceTest {
     void testSnowAdvice() {
         ArrayList<String> weatherConditions = new ArrayList<>();
         weatherConditions.add("Snow");
-        String advice = WeatherAdvice.weathAdvice(weatherConditions);
+        String advice = weatherAdvice.weathAdvice(weatherConditions);
         assertEquals("- Сегодня будет снег, будьте аккуратнее.", advice);
     }
 
@@ -28,7 +28,7 @@ class WeatherAdviceTest {
     void testCloudyWeatherAdvice() {
         ArrayList<String> weatherConditions = new ArrayList<>();
         weatherConditions.add("Clouds");
-        String advice = WeatherAdvice.weathAdvice(weatherConditions);
+        String advice = weatherAdvice.weathAdvice(weatherConditions);
         assertEquals("", advice);
     }
 
@@ -36,20 +36,20 @@ class WeatherAdviceTest {
     void testClearWeatherAdvice() {
         ArrayList<String> weatherConditions = new ArrayList<>();
         weatherConditions.add("Clear");
-        String advice = WeatherAdvice.weathAdvice(weatherConditions);
+        String advice = weatherAdvice.weathAdvice(weatherConditions);
         assertEquals("", advice);
     }
 
     @Test
     void testEmptyWeatherAdvice() {
         ArrayList<String> weatherConditions = new ArrayList<>();
-        String advice = WeatherAdvice.weathAdvice(weatherConditions);
+        String advice = weatherAdvice.weathAdvice(weatherConditions);
         assertEquals("", advice);
     }
 
     @Test
     void testNullWeatherAdvice() {
-        String advice = WeatherAdvice.weathAdvice(null);
+        String advice = weatherAdvice.weathAdvice(null);
         assertEquals("", advice);
     }
 }
