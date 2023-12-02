@@ -5,8 +5,12 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Locale;
 
+import org.kirillandrey.alerting.EntryUser;
 import org.kirillandrey.config.DBConfig;
 import org.kirillandrey.config.DBConst;
 
@@ -329,11 +333,14 @@ public class DateBaseHandler {
      *
      * @return {@code HashMap} с парами "идентификатор чата"-"время уведомления"
      */
-    public HashMap<String, String> getTimesForAlerts() {
-        HashMap<String, String> result = new HashMap<>();
+    public LinkedList<EntryUser> getTimesForAlerts() {
+        LinkedList<EntryUser> result = new LinkedList<>();
 
         String selectQuery = "SELECT " + DBConst.USER_CHATID + ", " + DBConst.USER_TIME +
-                " FROM " + dbConfig.getdbNotificTableName();
+                " FROM " + dbConfig.getdbNotificTableName() +
+                " ORDER BY " +
+                "CASE WHEN STR_TO_DATE(" + DBConst.USER_TIME + ", '%H:%i') >= CURTIME() THEN STR_TO_DATE(" + DBConst.USER_TIME + ", '%H:%i') " +
+                "ELSE STR_TO_DATE(" + DBConst.USER_TIME + ", '%H:%i') + INTERVAL 1 DAY END";
 
         try (Connection connection = dbGetConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
@@ -341,11 +348,10 @@ public class DateBaseHandler {
 
             while (resultSet.next()) {
                 String chatId = resultSet.getString(DBConst.USER_CHATID);
-                String time = resultSet.getString(DBConst.USER_TIME);
+                String timeString = resultSet.getString(DBConst.USER_TIME);
 
-                result.put(chatId, time);
+                result.addLast(new EntryUser(chatId, timeString));
             }
-
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }

@@ -3,14 +3,17 @@ import org.junit.jupiter.api.Test;
 import org.kirillandrey.service.SettingJson;
 
 import static org.junit.jupiter.api.Assertions.*;
+import org.kirillandrey.JSON.List;
+
 
 public class WeatherParseTest {
+    private WeatherParse weatherParse = new WeatherParse();
 
     @Test
     public void testGetReadyForecast() {
         // Тест на успешное получение прогноза для существующего города
         String city = "Moscow";
-        String forecast = WeatherParse.getReadyForecast(city, new SettingJson());
+        String forecast = weatherParse.getReadyForecast(city, new SettingJson());
         assertNotNull(forecast);
         assertFalse(forecast.isEmpty());
     }
@@ -41,5 +44,26 @@ public class WeatherParseTest {
             fail("Exception should not be thrown for valid JSON data");
         }
     }
-}
 
+    @Test
+    public void testCheckCity() {
+        // Тест на проверку существования города
+        String city = "Moscow";
+        assertTrue(weatherParse.checkCity(city));
+    }
+
+    @Test
+    public void testGetListForAlert() {
+        // Тест на успешное получение списка для уведомлений
+        SettingJson settingJson = new SettingJson();
+        settingJson.setCity("Moscow");
+        settingJson.setTimezone("3");
+        try {
+            java.util.List<List> forecastList = weatherParse.getListForAlert(settingJson);
+            assertNotNull(forecastList);
+            assertFalse(forecastList.isEmpty());
+        } catch (Exception e) {
+            fail("Exception should not be thrown for valid settings");
+        }
+    }
+}

@@ -12,7 +12,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 /**
@@ -84,32 +87,41 @@ public class WeatherParse {
     /**
      * Преобразует сырые данные JSON в отформатированный прогноз погоды.
      *
-     * @param Json сырые данные JSON
+     * @param json сырые данные JSON
      * @param city        город
      * @param settings    настройки вывода информации о погоде
      * @return строка с отформатированным прогнозом погоды
      * @throws Exception если произошла ошибка при парсинге данных
      */
-    protected static String parsePojo(String Json, String city, SettingJson settings) throws Exception {
+    protected static String parsePojo(String json, String city, SettingJson settings) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
-        Example example = objectMapper.readValue(Json, Example.class);
-        List<org.kirillandrey.JSON.List> lists = example.getList();
+        Example example = objectMapper.readValue(json, Example.class);
+        List<org.kirillandrey.JSON.List> allLists = example.getList();
 
-        LocalDateTime currentDateTime = LocalDateTime.now();
+        ZoneOffset zoneOffset = ZoneOffset.ofHours(Integer.parseInt(settings.getTimezone()));
+
+        ZonedDateTime currentDateTime = ZonedDateTime.now(zoneOffset);
 
         final StringBuffer sb = new StringBuffer();
         sb.append(city).append(":\n");
-        for (org.kirillandrey.JSON.List list : lists) {
+
+        int count = 0;
+        for (org.kirillandrey.JSON.List list : allLists) {
             LocalDateTime forecastDateTime = LocalDateTime.parse(list.getDtTxt(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            String formattedDateTime = forecastDateTime.format(OUTPUT_DATE_TIME_FORMAT);
-            if (forecastDateTime.getYear() == currentDateTime.getYear() &&
-                    forecastDateTime.getMonth() == currentDateTime.getMonth() &&
-                    forecastDateTime.getDayOfMonth() == currentDateTime.getDayOfMonth()) {
-                sb.append("⏰ | "  + formattedDateTime + " (" + forecastDateTime.getHour() + ":00)" + "\n");
+            ZonedDateTime forecastZonedDateTime = forecastDateTime.atZone(zoneOffset);
+
+            if (forecastZonedDateTime.isAfter(currentDateTime)) {
+                String formattedDateTime = forecastZonedDateTime.format(OUTPUT_DATE_TIME_FORMAT);
+                sb.append("⏰ | " + formattedDateTime + " (" + forecastDateTime.getHour() + ":00)" + "\n");
                 sb.append(formatForecastData(list, settings) + "\n");
+                count++;
+
+                if (count == 8) {
+                    break; // Прерываем цикл, когда достигнут лимит в 8 записей
+                }
             }
         }
         return sb.toString();
@@ -131,7 +143,7 @@ public class WeatherParse {
             String formattedTemperature;
             long roundedTemperature = Math.round(temp);
             if (roundedTemperature > 0) {
-                formattedTemperature = "+" + String.valueOf(Math.round(temp));
+                formattedTemperature = "+" + Math.round(temp);
             } else {
                 formattedTemperature = String.valueOf(Math.round(temp));
             }
@@ -146,9 +158,11 @@ public class WeatherParse {
             sb.append(String.format("\uD83C\uDF00 | Влажность: %s%%%s", formattedHumidity, System.lineSeparator()));
         }
         if (settings.getWeather().equals("Вкл")) {
+            sb.append("⛰\uFE0F | Погода: " );
             for (Weather weather : list.getWeather()) {
-                sb.append(String.format("⛰\uFE0F | Погода: %s%s", weather.getlocate(weather.getMain()), System.lineSeparator()));
+                sb.append(weather.getlocate(weather.getMain()) + "  ");
             }
+            sb.append(System.lineSeparator());
         }
         if (settings.getWind().equals("Вкл")) {
             Wind wind = list.getWind();
@@ -176,5 +190,52 @@ public class WeatherParse {
             e.printStackTrace();
             return false;
         }
+    }
+    /**
+     * Обрабатывает html запрос и возвращает все записи погоды на 1 день.
+     *
+     * @param settingJson настройки
+     * @return List<org.kirillandrey.JSON.List> в нем не более 8 записей на ближайшие 24 часа
+     */
+    public List<org.kirillandrey.JSON.List> getListForAlert(SettingJson settingJson) throws Exception {
+        String city = settingJson.getCity();
+        String timezone = settingJson.getTimezone();
+        String jsonRawData;
+        try {
+            jsonRawData = downloadJsonRawData(city);
+        } catch (IllegalArgumentException e) {
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+
+        Example example = objectMapper.readValue(jsonRawData, Example.class);
+        List<org.kirillandrey.JSON.List> allLists = example.getList();
+
+        List<org.kirillandrey.JSON.List> result = new ArrayList<>();
+
+        // Получаем текущее время в указанном часовом поясе
+        ZoneOffset zoneOffset = ZoneOffset.ofHours(Integer.parseInt(timezone));
+
+        ZonedDateTime currentDateTime = ZonedDateTime.now(zoneOffset);
+
+        int i = 0;
+        for (org.kirillandrey.JSON.List list : allLists) {
+            // Преобразуем временную метку из JSON в ZonedDateTime
+            LocalDateTime forecastDateTime = LocalDateTime.parse(list.getDtTxt(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            ZonedDateTime forecastZonedDateTime = forecastDateTime.atZone(zoneOffset);
+
+            // Сравниваем с текущим временем и добавляем в результат, если удовлетворяет условиям
+            if (forecastZonedDateTime.isAfter(currentDateTime) && i < 8) {
+                result.add(list);
+                i++;
+            }
+        }
+        return result;
     }
 }

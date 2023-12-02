@@ -10,6 +10,8 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.kirillandrey.alerting.AlertUtil.signalUserListChanged;
+
 public class Settings8 implements Dialog {
     private String m_ask = "Введите вермя отправики уведомления (Пример:  16:21):";
     List<String> keyboard = new ArrayList<>();
@@ -25,24 +27,30 @@ public class Settings8 implements Dialog {
     public String answer(String message, Long chatid) {
         SettingJson settingJson = new DateBaseHandler().getSettings(chatid);
         DateBaseHandler dateBaseHandler = new DateBaseHandler();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:mm");
+
         try {
             LocalTime parsedTime = LocalTime.parse(message, formatter);
-            settingJson.setTime(parsedTime.toString());
+            String formattedTime = parsedTime.format(formatter);
+
+            settingJson.setTime(formattedTime);
             dateBaseHandler.setSettings(chatid, settingJson);
+
             if (settingJson.getNotifications().equals("Вкл")) {
-                String[] time = parsedTime.toString().split(":");
-                int newhour = Math.abs((5 - Integer.parseInt(settingJson.getTimezone())) + Integer.parseInt(time[0])) % 24;
-                time[0] = String.valueOf(newhour);
+                String[] time = formattedTime.split(":");
+                int userTimezone = Integer.parseInt(settingJson.getTimezone());
+                int newhour = Math.floorMod((5 - userTimezone) + Integer.parseInt(time[0]), 24);
+                time[0] = String.format("%02d", newhour);
                 dateBaseHandler.addUserInNotificationTable(chatid, time[0] + ":" + time[1]);
+                signalUserListChanged();
             }
+
             dateBaseHandler.setState(chatid, "3");
             return "Вы успешно изменили время отправки уведомлений";
         } catch (DateTimeParseException e) {
-            return "";
+            return "Неверный формат времени. Пожалуйста, используйте формат ЧЧ:мм, например, 09:00.";
         }
     }
-
     @Override
     public String getKey() {
         return key;

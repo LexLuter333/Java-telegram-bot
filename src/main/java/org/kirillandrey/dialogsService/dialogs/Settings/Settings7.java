@@ -1,11 +1,16 @@
 package org.kirillandrey.dialogsService.dialogs.Settings;
 
+import org.kirillandrey.alerting.Alert;
+import org.kirillandrey.alerting.EntryUser;
 import org.kirillandrey.dialogsService.controller.Dialog;
 import org.kirillandrey.service.DateBaseHandler;
 import org.kirillandrey.service.SettingJson;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+
+import static org.kirillandrey.alerting.AlertUtil.signalUserListChanged;
 
 public class Settings7 implements Dialog {
     private String m_ask = "Выберите \"Включить\" / \"Выключить\" уведомления:";
@@ -29,18 +34,28 @@ public class Settings7 implements Dialog {
         if (message.equalsIgnoreCase("выключить") || message.equalsIgnoreCase("включить")) {
             dateBaseHandler.setState(chatid, "3");
             if (message.equalsIgnoreCase("включить") && settingJson.getNotifications().equals("Выкл")) {
+                if (settingJson.getCity().equals("Не задан"))
+                {
+                    return "Ошибка, введите город по умолчанию.";
+                } if (settingJson.getTime().equals("Не задано")){
+                    return "Ошибка, введите время ежедневного уведомления.";
+                }
                 settingJson.setNotifications("Вкл");
-                if (!settingJson.getTime().equals("Не задано")) {
+                if (!settingJson.getTime().equals("Не задан")) {
                     String[] time = settingJson.getTime().split(":");
-                    int newhour = Math.abs((Integer.parseInt(settingJson.getTimezone()) - 5) + Integer.parseInt(time[0])) % 24;
-                    time[0] = String.valueOf(newhour);
+                    int userTimezone = Integer.parseInt(settingJson.getTimezone());
+                    int newhour = Math.floorMod((5 - userTimezone) + Integer.parseInt(time[0]), 24);
+                    time[0] = String.format("%02d", newhour);
                     dateBaseHandler.addUserInNotificationTable(chatid, time[0] + ":" + time[1]);
+                    signalUserListChanged();
                 }
                 dateBaseHandler.setSettings(chatid, settingJson);
+
                 return "Вы включили уведомление";
             } else if (message.equalsIgnoreCase("выключить") && settingJson.getNotifications().equals("Вкл")) {
                 settingJson.setNotifications("Выкл");
-                        dateBaseHandler.removeUserFromNotificationTable(chatid);
+                dateBaseHandler.removeUserFromNotificationTable(chatid);
+                signalUserListChanged();
                 dateBaseHandler.setSettings(chatid, settingJson);
                 return "Вы выключили уведомление";
             }

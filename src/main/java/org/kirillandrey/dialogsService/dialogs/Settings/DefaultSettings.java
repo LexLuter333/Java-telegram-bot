@@ -7,6 +7,8 @@ import org.kirillandrey.service.SettingJson;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.kirillandrey.alerting.AlertUtil.signalUserListChanged;
+
 public class DefaultSettings implements Dialog {
     private String m_ask = "Вы действительно хотите сбросить настройки по умолчанию? (Введите: \"Подтвердить\" / или вернитесь \"Назад\")";
     List<String> keyboard = new ArrayList<>();
@@ -21,8 +23,12 @@ public class DefaultSettings implements Dialog {
     @Override
     public String answer(String message, Long chatid) {
         if (message.equalsIgnoreCase("подтвердить")) {
-            new DateBaseHandler().setState(chatid, "0");
-            if (new DateBaseHandler().setSettings(chatid, new SettingJson())) {
+            DateBaseHandler dbhendler = new DateBaseHandler();
+            dbhendler.setState(chatid, "3");
+
+            if (dbhendler.setSettings(chatid, new SettingJson())) {
+                dbhendler.removeUserFromNotificationTable(chatid);
+                signalUserListChanged();
                 return "Настройки успешно " +
                         "сброшены по умолчанию";
             }
