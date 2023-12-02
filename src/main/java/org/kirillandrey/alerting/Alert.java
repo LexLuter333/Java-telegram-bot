@@ -146,18 +146,19 @@ public class Alert implements Runnable {
 
 
         StringBuilder sb = new StringBuilder();
-        if (temp != null){
+        if (temp != null && !temp.equals("")){
             sb.append(temp + "\n");
         }
-        if (temp != null){
+        if (hum != null && !hum.equals("")){
             sb.append(hum + "\n");
         }
-        if (temp != null && !temp.equals("")){
+        if (wind != null && !wind.equals("")){
             sb.append(wind + "\n");
         }
-        if (temp != null){
+        if (weather != null && !weather.equals("")){
             sb.append(weather + "\n");
         }
+        System.out.println(sb.toString());
         return sb.toString();
     }
 

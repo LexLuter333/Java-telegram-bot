@@ -13,7 +13,7 @@ public class WindAdvice {
 
     }
 
-    public static String winAdv(Integer wind){
+    public String winAdv(Integer wind){
         if (wind == null) {
             return "";
         }

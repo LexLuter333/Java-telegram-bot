@@ -15,7 +15,7 @@ public class TemperatureAdvice {
         mapTempAdvice.put("130" , "- Сегодня очень холодно, советуем очень тепло одеться.");
 
     }
-    public static String tempAdvice(Integer countTemp){
+    public String tempAdvice(Integer countTemp){
         if (countTemp == null) {
             return "";
         }

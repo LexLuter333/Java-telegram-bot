@@ -14,7 +14,7 @@ public class WeatherAdvice {
         mapWethAdvice.put("Clear", "");
     }
 
-    public static String weathAdvice(ArrayList<String> weth){
+    public String weathAdvice(ArrayList<String> weth){
         if (weth == null) {
             return "";
         }

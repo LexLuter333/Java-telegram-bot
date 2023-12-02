@@ -8,7 +8,6 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
-import static org.kirillandrey.alerting.AlertUtil.signalUserListChanged;
 
 public class Main {
     public static void main(String[] args) throws TelegramApiException {

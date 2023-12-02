@@ -12,7 +12,7 @@ public class HumidityAdvice {
         mapHumAdvice.put(100, "- Сегодня высокая влажность воздуха, пейте больше воды.");
     }
 
-    public static String humAdvice(Integer hum) {
+    public String humAdvice(Integer hum) {
         if (hum == null) {
             return "";
         }
