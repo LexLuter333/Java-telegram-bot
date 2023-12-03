@@ -56,23 +56,13 @@ public class Alert implements Runnable {
      */
     @Override
     public void run() {
-        synchronized (this) {
-            if (userListChanged) {
-                // Если были изменения в списке пользователей, обновляем список и сбрасываем флаг
-                userList.clear();
-                userList.addAll(dbHandler.getTimesForAlerts());
-                userListChanged = false;
-                isFirstRun = true;
-            }
+        if (userListChanged) {
+            // Если были изменения в списке пользователей, обновляем список и сбрасываем флаг
+            userList.clear();
+            userList.addAll(dbHandler.getTimesForAlerts());
+            userListChanged = false;
+            isFirstRun = true;
         }
-
-        int i = 1;
-        // Пример: вывод информации о пользователях
-        for (EntryUser user : userList) {
-            System.out.println(i + ") User: " + user.getChatid() + ", Time: " + user.getTime());
-            i++;
-        }
-
         // Здесь добавьте код для оповещения пользователей перед ближайшим временем
         if (!userList.isEmpty()) {
             EntryUser currentUser = userList.getFirst();
