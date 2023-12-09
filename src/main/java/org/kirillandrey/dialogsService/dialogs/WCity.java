@@ -1,6 +1,7 @@
 package org.kirillandrey.dialogsService.dialogs;
 
 import org.kirillandrey.WeatherBot.WeatherParse;
+import org.kirillandrey.dialogsService.controller.CacheCountDays;
 import org.kirillandrey.dialogsService.controller.Dialog;
 import org.kirillandrey.service.DateBaseHandler;
 
@@ -11,7 +12,7 @@ public class WCity implements Dialog {
     private String m_ask = "Введите название города:";
 
     List<String> keyboard = new ArrayList<>();
-    private String key = "узнать погоду";
+    private String key = "узнать погоду по городу";
     public WCity() {
         keyboard.add("Назад");
     }
@@ -24,7 +25,11 @@ public class WCity implements Dialog {
 
     @Override
     public String answer(String message, Long chatid) {
-        return WeatherParse.getReadyForecast(message, new DateBaseHandler().getSettings(chatid));
+        Integer days = CacheCountDays.getDays(chatid);
+        if (days != null) {
+            return WeatherParse.getReadyForecast(message, new DateBaseHandler().getSettings(chatid), days);
+        }
+        return "Время ожидания вышло.";
     }
 
     @Override

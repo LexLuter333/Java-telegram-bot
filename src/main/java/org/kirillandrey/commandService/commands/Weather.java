@@ -17,7 +17,7 @@ public class Weather implements Command {
                 City = City + args[i];
                 if (i != args.length-1) City = City + " ";
             }
-            resautl = WeatherParse.getReadyForecast(City, new DateBaseHandler().getSettings(chatid));
+            resautl = WeatherParse.getReadyForecast(City, new DateBaseHandler().getSettings(chatid), 1);
         } else {
             resautl = "Ошибка ввода локации (Пример: /weather Екатеринбург или Ekaterinburg)";
         }
