@@ -9,12 +9,19 @@ import java.util.List;
  */
 public class DialogHandler {
     private Graph graphDialog;
+    private DateBaseHandler dateBaseHandler;
     /**
      * Конструктор класса, инициализирующий объект {@code DialogHandler}.
      */
     public DialogHandler(){
         this.graphDialog = new Graph();
+        this.dateBaseHandler = new DateBaseHandler();
     }
+    public DialogHandler(DateBaseHandler dateBaseHandler){
+        this.graphDialog = new Graph();
+        this.dateBaseHandler = dateBaseHandler;
+    }
+
     /**
      * Обрабатывает ответ в диалоге
      *
@@ -23,19 +30,19 @@ public class DialogHandler {
      * @return строка ответа на команду
      */
     public String handleAnswerDialog(String command, Long chatid) {
-        String state = new DateBaseHandler().getState(chatid);
+        String state = dateBaseHandler.getState(chatid);
         Node node = graphDialog.getNode(state);
 
         if ("назад".equalsIgnoreCase(command)) {
             Node parent = node.getParent();
             if (parent != null) {
-                new DateBaseHandler().setState(chatid, parent.getKeyState());
+                dateBaseHandler.setState(chatid, parent.getKeyState());
                 return "";
             }
         }
 
         Node nextNode = node.findNextNode(command);
-        if (new DateBaseHandler().setState(chatid, nextNode.getKeyState())) {
+        if (dateBaseHandler.setState(chatid, nextNode.getKeyState())) {
             return node.getData().answer(command, chatid);
         }
         return "";
@@ -48,7 +55,7 @@ public class DialogHandler {
      * @return строка ответа на запрос
      */
     public String handleAskDialog(Long chatid, List<String> button){
-        String state = new DateBaseHandler().getState(chatid);
+        String state = dateBaseHandler.getState(chatid);
         Node node = graphDialog.getNode(state);
         return node.getData().ask(chatid, button);
     }

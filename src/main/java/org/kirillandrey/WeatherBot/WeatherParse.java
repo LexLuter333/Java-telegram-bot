@@ -39,12 +39,12 @@ public class WeatherParse {
      * @param settings настройки вывода информации о погоде
      * @return строка с отформатированным прогнозом погоды
      */
-    public static String getReadyForecast(String city, SettingJson settings) {
+    public static String getReadyForecast(String city, SettingJson settings, Integer days) {
         String result;
 
         try {
             String jsonRawData = downloadJsonRawData(city);
-            String parsedData = parsePojo(jsonRawData, city, settings);
+            String parsedData = parsePojo(jsonRawData, city, settings, days);
             result = parsedData;
         } catch (IllegalArgumentException e) {
             return String.format("Не можем найти \"%s\" город. Попробуйе ещё, например: \"Moscow\" or \"Ekateringurg\"", city);
@@ -54,12 +54,12 @@ public class WeatherParse {
         }
         return result;
     }
-    public static String getReadyForecast(String latitude, String longitude, SettingJson settings){
+    public static String getReadyForecast(String latitude, String longitude, SettingJson settings, Integer days){
         String result;
 
         try {
             String jsonRawData = downloadJsonRawData(latitude, longitude);
-            String parsedData = parsePojo(jsonRawData, "Месторасположение(" + latitude + "; " + longitude + ")", settings);
+            String parsedData = parsePojo(jsonRawData, "Месторасположение(" + latitude + "; " + longitude + ")", settings, days);
             result = parsedData;
         } catch (IllegalArgumentException e) {
             return String.format("Не можем найти это место на карте.");
@@ -71,7 +71,6 @@ public class WeatherParse {
     }
     public static String downloadJsonRawData(String latitude, String longitude) throws Exception {
         String urlString = API_CALL_COORDINATES + "lat=" + latitude + "&lon=" + longitude + API_KEY_TEMPLATE;
-        System.out.println(urlString);
         URL urlObject = new URL(urlString);
         HttpURLConnection connection = (HttpURLConnection) urlObject.openConnection();
         connection.setRequestMethod("GET");
@@ -121,7 +120,6 @@ public class WeatherParse {
 
         return response.toString();
     }
-
     /**
      * Преобразует сырые данные JSON в отформатированный прогноз погоды.
      *
@@ -131,7 +129,7 @@ public class WeatherParse {
      * @return строка с отформатированным прогнозом погоды
      * @throws Exception если произошла ошибка при парсинге данных
      */
-    protected static String parsePojo(String json, String city, SettingJson settings) throws Exception {
+    protected static String parsePojo(String json, String city, SettingJson settings, Integer days) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
@@ -140,28 +138,37 @@ public class WeatherParse {
         List<org.kirillandrey.JSON.List> allLists = example.getList();
 
         ZoneOffset zoneOffset = ZoneOffset.ofHours(Integer.parseInt(settings.getTimezone()));
-
         ZonedDateTime currentDateTime = ZonedDateTime.now(zoneOffset);
 
-        final StringBuffer sb = new StringBuffer();
+        StringBuffer sb = new StringBuffer();
         sb.append(city).append(":\n");
 
         int count = 0;
+        int skipCount = 0;
+
         for (org.kirillandrey.JSON.List list : allLists) {
+            if (skipCount > 0){
+                skipCount--;
+                continue;
+            }
             LocalDateTime forecastDateTime = LocalDateTime.parse(list.getDtTxt(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             ZonedDateTime forecastZonedDateTime = forecastDateTime.atZone(zoneOffset);
 
-            if (forecastZonedDateTime.isAfter(currentDateTime)) {
+            // Отфильтровываем только те записи, которые в пределах указанного количества дней
+            if (forecastZonedDateTime.isAfter(currentDateTime) && count < days * 8) {
                 String formattedDateTime = forecastZonedDateTime.format(OUTPUT_DATE_TIME_FORMAT);
                 sb.append("⏰ | " + formattedDateTime + " (" + forecastDateTime.getHour() + ":00)" + "\n");
                 sb.append(formatForecastData(list, settings) + "\n");
                 count++;
 
-                if (count == 8) {
-                    break; // Прерываем цикл, когда достигнут лимит в 8 записей
+                // Пропускаем две записи после каждой третьей начиная с третьего дня
+                if (count / 8 >= 2) {
+                    skipCount = 2;
+                    count += 2;
                 }
             }
         }
+
         return sb.toString();
     }
 

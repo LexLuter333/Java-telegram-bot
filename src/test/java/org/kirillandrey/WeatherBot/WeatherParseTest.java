@@ -13,7 +13,7 @@ public class WeatherParseTest {
     public void testGetReadyForecast() {
         // Тест на успешное получение прогноза для существующего города
         String city = "Moscow";
-        String forecast = weatherParse.getReadyForecast(city, new SettingJson());
+        String forecast = weatherParse.getReadyForecast(city, new SettingJson(), 1);
         assertNotNull(forecast);
         assertFalse(forecast.isEmpty());
     }
@@ -37,7 +37,7 @@ public class WeatherParseTest {
         String json = "{\"city\": {\"name\": \"Moscow\"}, \"list\": []}";
         String city = "Moscow";
         try {
-            String parsedData = WeatherParse.parsePojo(json, city, new SettingJson());
+            String parsedData = WeatherParse.parsePojo(json, city, new SettingJson(),1);
             assertNotNull(parsedData);
             assertFalse(parsedData.isEmpty());
         } catch (Exception e) {

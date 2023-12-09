@@ -1,6 +1,7 @@
 package org.kirillandrey.dialogsService.dialogs;
 
 import org.kirillandrey.WeatherBot.WeatherParse;
+import org.kirillandrey.dialogsService.controller.CacheCountDays;
 import org.kirillandrey.dialogsService.controller.Dialog;
 import org.kirillandrey.service.DateBaseHandler;
 import org.kirillandrey.service.SettingJson;
@@ -29,7 +30,13 @@ public class WLocate implements Dialog {
         if (!message.isEmpty() && !message.equals("")) {
             String latitude = message.split(" ")[0];
             String longitude = message.split(" ")[1];
-            return WeatherParse.getReadyForecast(latitude, longitude, new DateBaseHandler().getSettings(chatid));
+            Integer days = CacheCountDays.getDays(chatid);
+
+            if (days != null) {
+                return WeatherParse.getReadyForecast(latitude, longitude, new DateBaseHandler().getSettings(chatid), days);
+            }
+            return "Время ожидания вышло.";
+
         }
         return "Ошибка получения данных геолокации";
     }
