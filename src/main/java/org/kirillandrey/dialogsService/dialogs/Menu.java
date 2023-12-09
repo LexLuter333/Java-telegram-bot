@@ -11,6 +11,7 @@ public class Menu implements Dialog {
     private String key = "меню";
     public Menu(){
         keyboard.add("Узнать погоду");
+        keyboard.add("Узнать погоду по геолокации");
         keyboard.add("Настройки");
     }
     @Override

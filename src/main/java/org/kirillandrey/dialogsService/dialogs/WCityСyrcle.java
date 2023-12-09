@@ -6,11 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WCityСyrcle implements Dialog {
-    private String m_ask = "Чтобы посмотреть погоду ещё раз, нажмите \"Узнать погоду\" или вернитесь в \"Меню\".";
+    private String m_ask = "Чтобы посмотреть погоду ещё раз, нажмите \"Узнать погоду\", \"Узнать погоду геолокации\" или вернитесь в \"Меню\".";
     List<String> keyboard = new ArrayList<>();
     private String key;
     public WCityСyrcle(){
         keyboard.add("Узнать погоду");
+        keyboard.add("Узнать погоду по геолокации");
         keyboard.add("Меню");
     }
     @Override

@@ -24,6 +24,7 @@ import java.util.Locale;
 public class WeatherParse {
 
     private static String API_CALL_TEMPLATE = "https://api.openweathermap.org/data/2.5/forecast?q=";
+    private static String API_CALL_COORDINATES = "https://api.openweathermap.org/data/2.5/forecast?";
     private static Dotenv dotenv = Dotenv.load();
     private static String apikey = dotenv.get("apiWeatherKey");
 
@@ -53,7 +54,44 @@ public class WeatherParse {
         }
         return result;
     }
+    public static String getReadyForecast(String latitude, String longitude, SettingJson settings){
+        String result;
 
+        try {
+            String jsonRawData = downloadJsonRawData(latitude, longitude);
+            String parsedData = parsePojo(jsonRawData, "Месторасположение(" + latitude + "; " + longitude + ")", settings);
+            result = parsedData;
+        } catch (IllegalArgumentException e) {
+            return String.format("Не можем найти это место на карте.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Ошибка подклчения к сервису, попробуйте позже";
+        }
+        return result;
+    }
+    public static String downloadJsonRawData(String latitude, String longitude) throws Exception {
+        String urlString = API_CALL_COORDINATES + "lat=" + latitude + "&lon=" + longitude + API_KEY_TEMPLATE;
+        System.out.println(urlString);
+        URL urlObject = new URL(urlString);
+        HttpURLConnection connection = (HttpURLConnection) urlObject.openConnection();
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("User-agent", USER_AGENT);
+
+        int responseCode = connection.getResponseCode();
+        if (responseCode == 404) {
+            throw new IllegalAccessException();
+        }
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        return response.toString();
+    }
     /**
      * Загружает сырые данные JSON о погоде.
      *
@@ -197,7 +235,7 @@ public class WeatherParse {
      * @param settingJson настройки
      * @return List<org.kirillandrey.JSON.List> в нем не более 8 записей на ближайшие 24 часа
      */
-    public List<org.kirillandrey.JSON.List> getListForAlert(SettingJson settingJson) throws Exception {
+    public static List<org.kirillandrey.JSON.List> getListForAlert(SettingJson settingJson) throws Exception {
         String city = settingJson.getCity();
         String timezone = settingJson.getTimezone();
         String jsonRawData;

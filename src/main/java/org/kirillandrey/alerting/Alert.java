@@ -74,7 +74,6 @@ public class Alert implements Runnable {
             // Планируем следующее оповещение
             EntryUser nextUserAfterNotification = userList.getFirst();
             isFirstRun = false;
-            System.out.println("Следующий: " + nextUserAfterNotification.getChatid());
             scheduledFuture = scheduler.schedule(this, calculateTimeUntilNextAlert(nextUserAfterNotification.getTime()), TimeUnit.MILLISECONDS);
         }
     }
@@ -104,7 +103,6 @@ public class Alert implements Runnable {
             throw new RuntimeException(e);
         }
         if (!result.equals("") && result != null) {
-            System.out.println("Отправлено: " + chatid);
             bot.sendMessage(chatid, "Ежедневное уведомление: \n" + result, new ArrayList<>());
         } else {
             System.out.println("Не отправлено: " + chatid);

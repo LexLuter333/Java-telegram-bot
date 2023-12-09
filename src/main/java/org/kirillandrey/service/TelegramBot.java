@@ -1,12 +1,15 @@
 package org.kirillandrey.service;
 
+import org.kirillandrey.JSON.Sys;
 import org.kirillandrey.commandService.controller.CommandHandler;
 import org.kirillandrey.config.BotConfig;
 import org.kirillandrey.dialogsService.controller.DialogHandler;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Location;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -36,8 +39,14 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        if (update.hasMessage() && update.getMessage().hasText()) {
-            String messageText = update.getMessage().getText();
+        if (update.hasMessage() && (update.getMessage().hasText()) || update.getMessage().hasLocation()) {
+            String messageText = "";
+            if (update.getMessage().hasText()){
+                messageText = update.getMessage().getText();
+            } else if (update.getMessage().hasLocation()) {
+                Location location = update.getMessage().getLocation();
+                messageText = location.getLatitude() + " " + location.getLongitude();
+            }
             Long chatid = update.getMessage().getChatId();
             List<String> button = new ArrayList<>();
 
@@ -98,6 +107,13 @@ public class TelegramBot extends TelegramLongPollingBot {
         List<KeyboardRow> keyboard = new ArrayList<>();
         for (String label : button) {
             KeyboardRow row = new KeyboardRow();
+            if (label.equals("Отправить геолокацию")){
+                KeyboardButton locationButton = new KeyboardButton("Отправить геолокацию");
+                locationButton.setRequestLocation(true);
+                row.add(locationButton);
+                keyboard.add(row);
+                continue;
+            }
             row.add(label);
             keyboard.add(row);
         }
