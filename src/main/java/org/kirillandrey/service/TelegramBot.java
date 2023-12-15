@@ -4,6 +4,7 @@ import org.kirillandrey.JSON.Sys;
 import org.kirillandrey.commandService.controller.CommandHandler;
 import org.kirillandrey.config.BotConfig;
 import org.kirillandrey.dialogsService.controller.DialogHandler;
+import org.kirillandrey.dialogsService.controller.Entry_Ask;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Location;
@@ -54,18 +55,18 @@ public class TelegramBot extends TelegramLongPollingBot {
                 String[] fullcommand = messageText.split(" ");
                 String command = fullcommand[0];
                 try {
-                    sendMessage(chatid, commandHandler.handleCommand(chatid, command, fullcommand), button);
+                    sendMessage(chatid, commandHandler.handleCommand(chatid, command, fullcommand));
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
             } else {
                 String answer = dialogHandler.handleAnswerDialog(messageText, chatid);
                 if (!answer.isEmpty()){
-                    sendMessage(chatid, answer, button);
+                    sendMessage(chatid, answer);
                 }
-                String ask = dialogHandler.handleAskDialog(chatid, button);
-                if (!ask.isEmpty()){
-                    sendMessage(update.getMessage().getChatId(), ask, button);
+                Entry_Ask ask = dialogHandler.handleAskDialog(chatid);
+                if (!ask.getM_ask().isEmpty()){
+                    sendMessage(update.getMessage().getChatId(), ask.getM_ask(), ask.getButton());
                 }
             }
         }
@@ -84,6 +85,24 @@ public class TelegramBot extends TelegramLongPollingBot {
         msg.setChatId(String.valueOf(chatID));
         msg.setText(textToSend);
         msg.setReplyMarkup(createKeyboard(button));
+        try{
+            execute(msg);
+        }
+        catch (TelegramApiException e){
+            e.printStackTrace();
+        }
+    }
+    /**
+     * Отправляет сообщение пользователю.
+     *
+     * @param chatID      идентификатор чата пользователя
+     * @param textToSend  текст сообщения
+     */
+    public void sendMessage(long chatID, String textToSend){
+
+        SendMessage msg = new SendMessage();
+        msg.setChatId(String.valueOf(chatID));
+        msg.setText(textToSend);
         try{
             execute(msg);
         }

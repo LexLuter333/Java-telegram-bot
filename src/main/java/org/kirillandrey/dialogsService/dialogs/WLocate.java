@@ -3,9 +3,8 @@ package org.kirillandrey.dialogsService.dialogs;
 import org.kirillandrey.WeatherBot.WeatherParse;
 import org.kirillandrey.dialogsService.controller.CacheCountDays;
 import org.kirillandrey.dialogsService.controller.Dialog;
+import org.kirillandrey.dialogsService.controller.Entry_Ask;
 import org.kirillandrey.service.DateBaseHandler;
-import org.kirillandrey.service.SettingJson;
-import org.telegram.telegrambots.meta.api.objects.Location;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +18,11 @@ public class WLocate implements Dialog {
         keyboard.add("Назад");
     }
     @Override
-    public String ask(Long chatid, List<String> button) {
-        button.clear();
-        button.addAll(keyboard);
-        return m_ask;
+    public Entry_Ask ask(Long chatid) {
+        Entry_Ask entryAsk = new Entry_Ask();
+        entryAsk.setM_ask(m_ask);
+        entryAsk.setButton(keyboard);
+        return entryAsk;
     }
 
     @Override

@@ -51,12 +51,11 @@ public class DialogHandler {
      * Обрабатывает вопрос пользователю в диалоге
      *
      * @param chatid идентификатор чата пользователя
-     * @param button список кнопок, доступных пользователю
-     * @return строка ответа на запрос
+     * @return Entry_Ask
      */
-    public String handleAskDialog(Long chatid, List<String> button){
+    public Entry_Ask handleAskDialog(Long chatid){
         String state = dateBaseHandler.getState(chatid);
         Node node = graphDialog.getNode(state);
-        return node.getData().ask(chatid, button);
+        return node.getData().ask(chatid);
     }
 }

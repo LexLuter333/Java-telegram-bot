@@ -1,6 +1,5 @@
 package org.kirillandrey.dialogsService.controller;
 
-import java.util.List;
 /**
  * Интерфейс {@code Dialog} предоставляет методы для взаимодействия с диалогами.
  */
@@ -9,10 +8,9 @@ public interface Dialog {
      * Задает вопрос в диалоге.
      *
      * @param chatid идентификатор чата пользователя
-     * @param button список доступных кнопок
-     * @return строка ответа на вопрос
+     * @return Entry_Ask
      */
-    public String ask(Long chatid, List<String> button);
+    public Entry_Ask ask(Long chatid);
 
     /**
      * Обрабатывает ответ пользователя в диалоге.

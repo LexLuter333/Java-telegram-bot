@@ -17,6 +17,30 @@ public class WeatherParseTest {
         assertNotNull(forecast);
         assertFalse(forecast.isEmpty());
     }
+    @Test
+    public void testGetReadyForecastNotSuccessful() {
+        // Тест на успешное получение прогноза для существующего города
+        String lat = "20.32412";
+        String lon = "12320.21412";
+        String forecast = weatherParse.getReadyForecast(lat, lon, new SettingJson(), 1);
+        assertEquals("Не найден город с указанными координатами", forecast);
+    }
+    @Test
+    public void testGetReadyForecastNotSuccessful2() {
+        // Тест на успешное получение прогноза для существующего города
+        String city = "йцуфыойвывф";
+        String forecast = weatherParse.getReadyForecast(city, new SettingJson(), 1);
+        assertEquals("Не можем найти \""+ city + "\" город. Попробуйте ещё, например: \"Moscow\" или \"Москва\"", forecast);
+    }
+    @Test
+    public void testGetReadyForecast2() {
+        // Тест на успешное получение прогноза для существующего города
+        String lat = "50.32412";
+        String lon = "20.21412";
+        String forecast = weatherParse.getReadyForecast(lat, lon, new SettingJson(), 1);
+        assertNotNull(forecast);
+        assertFalse(forecast.isEmpty());
+    }
 
     @Test
     public void testDownloadJsonRawData() {

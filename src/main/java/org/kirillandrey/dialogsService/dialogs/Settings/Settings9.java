@@ -1,6 +1,7 @@
 package org.kirillandrey.dialogsService.dialogs.Settings;
 
 import org.kirillandrey.dialogsService.controller.Dialog;
+import org.kirillandrey.dialogsService.controller.Entry_Ask;
 import org.kirillandrey.service.DateBaseHandler;
 import org.kirillandrey.service.SettingJson;
 
@@ -15,10 +16,11 @@ public class Settings9 implements Dialog {
     List<String> keyboard = new ArrayList<>();
     private String key = "9";
     @Override
-    public String ask(Long chatid, List<String> button) {
-        button.clear();
-        button.addAll(keyboard);
-        return m_ask;
+    public Entry_Ask ask(Long chatid) {
+        Entry_Ask entryAsk = new Entry_Ask();
+        entryAsk.setM_ask(m_ask);
+        entryAsk.setButton(keyboard);
+        return entryAsk;
     }
 
     @Override

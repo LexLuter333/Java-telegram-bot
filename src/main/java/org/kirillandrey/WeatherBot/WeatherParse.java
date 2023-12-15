@@ -37,6 +37,7 @@ public class WeatherParse {
      *
      * @param city     город
      * @param settings настройки вывода информации о погоде
+     * @param days кол-во дней в прогнозе
      * @return строка с отформатированным прогнозом погоды
      */
     public static String getReadyForecast(String city, SettingJson settings, Integer days) {
@@ -47,13 +48,22 @@ public class WeatherParse {
             String parsedData = parsePojo(jsonRawData, city, settings, days);
             result = parsedData;
         } catch (IllegalArgumentException e) {
-            return String.format("Не можем найти \"%s\" город. Попробуйе ещё, например: \"Moscow\" or \"Ekateringurg\"", city);
+            return String.format("Не можем найти \"%s\" город. Попробуйте ещё, например: \"Moscow\" или \"Москва\"", city);
         } catch (Exception e) {
             e.printStackTrace();
-            return "Ошибка подклчения к сервису, попробуйте позже";
+            return "Ошибка подключения к сервису, попробуйте позже";
         }
         return result;
     }
+    /**
+     * Получает прогноз погоды для указанного города и настроек.
+     *
+     * @param latitude широта
+     * @param longitude долгота
+     * @param settings настройки вывода информации о погоде
+     * @param days кол-во дней в прогнозе
+     * @return строка с отформатированным прогнозом погоды
+     */
     public static String getReadyForecast(String latitude, String longitude, SettingJson settings, Integer days){
         String result;
 
@@ -62,13 +72,21 @@ public class WeatherParse {
             String parsedData = parsePojo(jsonRawData, "Месторасположение(" + latitude + "; " + longitude + ")", settings, days);
             result = parsedData;
         } catch (IllegalArgumentException e) {
-            return String.format("Не можем найти это место на карте.");
-        } catch (Exception e) {
+            return String.format("Не найден город с указанными координатами");
+        }  catch (Exception e) {
             e.printStackTrace();
             return "Ошибка подклчения к сервису, попробуйте позже";
         }
         return result;
     }
+    /**
+     * Загружает сырые данные JSON о погоде.
+     *
+     * @param latitude широта
+     * @param longitude долгота
+     * @return строка с сырыми данными JSON
+     * @throws Exception если произошла ошибка при загрузке данных
+     */
     public static String downloadJsonRawData(String latitude, String longitude) throws Exception {
         String urlString = API_CALL_COORDINATES + "lat=" + latitude + "&lon=" + longitude + API_KEY_TEMPLATE;
         URL urlObject = new URL(urlString);
@@ -77,8 +95,8 @@ public class WeatherParse {
         connection.setRequestProperty("User-agent", USER_AGENT);
 
         int responseCode = connection.getResponseCode();
-        if (responseCode == 404) {
-            throw new IllegalAccessException();
+        if (responseCode == 400) {
+            throw new IllegalArgumentException("Город не найден");
         }
 
         BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -107,7 +125,7 @@ public class WeatherParse {
 
         int responseCode = connection.getResponseCode();
         if (responseCode == 404) {
-            throw new IllegalAccessException();
+            throw new IllegalArgumentException("Город не найден");
         }
 
         BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));

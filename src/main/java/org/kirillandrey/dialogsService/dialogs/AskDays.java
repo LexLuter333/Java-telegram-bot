@@ -2,6 +2,7 @@ package org.kirillandrey.dialogsService.dialogs;
 
 import org.kirillandrey.dialogsService.controller.CacheCountDays;
 import org.kirillandrey.dialogsService.controller.Dialog;
+import org.kirillandrey.dialogsService.controller.Entry_Ask;
 import org.kirillandrey.service.DateBaseHandler;
 
 import java.util.ArrayList;
@@ -21,10 +22,11 @@ public class AskDays implements Dialog {
     }
 
     @Override
-    public String ask(Long chatid, List<String> button) {
-        button.clear();
-        button.addAll(keyboard);
-        return m_ask;
+    public Entry_Ask ask(Long chatid) {
+        Entry_Ask entryAsk = new Entry_Ask();
+        entryAsk.setM_ask(m_ask);
+        entryAsk.setButton(keyboard);
+        return entryAsk;
     }
 
     @Override
